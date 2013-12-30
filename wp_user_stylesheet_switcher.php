@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP User Stylesheet Switcher
-Version: v0.1.0
+Version: v0.2.0
 Plugin URI: http://web.globulesverts.org
 Author: Stéphane Groleau
 Author URI: http://web.globulesverts.org
@@ -88,8 +88,11 @@ function create_wp_user_stylesheet_switcher()
  * */
 function show_wp_user_stylesheet_switcher_options()
 {
-	$settings = get_option('wp_user_stylesheet_switcher_settings');    
-    if (isset($_POST['info_update']))
+	$settings = get_option('wp_user_stylesheet_switcher_settings');
+
+	$nbStylesheets = count($settings['options']);
+	
+    if ((isset($_POST['info_update'])) || (isset($_POST['add_stylesheet_option'])) || (isset($_POST['delete_last_stylesheet_option'])))
     {
     	$nonce = $_REQUEST['_wpnonce'];
 		if ( !wp_verify_nonce($nonce, 'wp_user_stylesheet_switcher_update')){
@@ -98,15 +101,32 @@ function show_wp_user_stylesheet_switcher_options()
 
         $settings['title'] = $_POST["wp_user_stylesheet_switcher_title"];
         $settings['default'] = $_POST["wp_user_stylesheet_switcher_default"];
+        $nbStylesheets = intval($_POST["wp_user_stylesheet_switcher_number"]);
         
-        for ($i = 0; $i<5; $i++) {
+        if (isset($_POST['delete_last_stylesheet_option']) && ($nbStylesheets > 1)) 
+        {
+			$nbStylesheets--;
+			unset($settings['options'][$nbStylesheets]);
+		}
+        
+        for ($i=0; $i<$nbStylesheets; $i++) {
 			$Option = array(
 				'name' => $_POST["wp_user_stylesheet_switcher_name".$i],
 				'file' => $_POST["wp_user_stylesheet_switcher_file".$i]
 			);
 			$settings['options'][$i] = $Option;
 		}
-        
+		
+		if (isset($_POST['add_stylesheet_option']))
+		{
+			$Option = array(
+					'name' => '',
+					'file' => ''
+				);
+			$settings['options'][$nbStylesheets] = $Option;
+			$nbStylesheets++;
+			//$settings['nbStylesheets']++;
+		}
 		update_option('wp_user_stylesheet_switcher_settings', $settings);
     }
     
@@ -121,7 +141,7 @@ function show_wp_user_stylesheet_switcher_options()
 	echo '
 	<table class="form-table">
 	<tr valign="top">
-	<th scope="row">'.(__("Label for the list ", "WUSC")).'</th>
+	<th scope="row">'.(__("Label for the public dropdown list ", "WUSC")).'</th>
 	<td><input type="text" name="wp_user_stylesheet_switcher_title" value="'.$settings['title'].'" size="20" maxlength="40"/></td>
 	</tr></table>';
 	
@@ -131,10 +151,16 @@ function show_wp_user_stylesheet_switcher_options()
 		echo '<tr valign="top"><th scope="row">'.(__("Stylesheet option".($no+1), "WUSC")).'</th><td><label for="wp_user_stylesheet_switcher_name'.$no.'">'.(__("Option name ", "WUSC")).' </label><input type="text" name="wp_user_stylesheet_switcher_name'.$no.'" value="'.$option['name'].'" size="20" maxlength="40"/></td><td><label for="wp_user_stylesheet_switcher_file'.$no.'">'.(__("CSS file name (including .CSS extension)", "WUSC")). ' </label><input type="text" name="wp_user_stylesheet_switcher_file'.$no.'" value="'.$option['file'].'" size="20" maxlength="40"/></td></tr>';
 		$no++;
 	}
+			
 	echo '</table>';
+	echo'<div class="submit">
+        <input type="submit" class="button-primary" name="add_stylesheet_option" value="'.(__("+ Add another stylesheet option", "WUSC")).'" />
+        <input type="submit" class="button-primary" name="delete_last_stylesheet_option" value="'.(__("- Delete last stylesheet option", "WUSC")).'" />
+    </div>';	
+	echo '<input type="hidden" name="wp_user_stylesheet_switcher_number" value="'.$nbStylesheets.'">';
 	
 	echo '<table class="form-table"><tr valign="top">
-	<th scope="row">'.(__("Stylesheet default", "WUSC")).'</th>
+	<th scope="row">'.(__("Default stylesheet", "WUSC")).'</th>
 	<td><select name="wp_user_stylesheet_switcher_default">';
 	
 	$noOption=0;
