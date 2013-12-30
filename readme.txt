@@ -3,8 +3,8 @@ Contributors: vgstef
 Donate link: http://web.globulesverts.org
 Tags: stylesheet, customize, CSS
 Requires at least: 3.0
-Tested up to: 3.6.1
-Stable tag: v0.1.0
+Tested up to: 3.8
+Stable tag: v0.2.0
 License: GPLv2 or later
 
 
@@ -52,8 +52,16 @@ Then my other files only need to override the original styles.
 2. Dropdown list visible in the Frontend.
 
 == Changelog ==
+= 0.2.0 =
+* No limits for the number of stylesheets to offer.
 
-0.1.0 - First stable version released.
+= 0.1.0 = 
+* First stable version released.
 
 
+== Upgrade Notice ==
+= 0.2.0 =
+* No limits for the number of stylesheets to offer.
 
+= 0.1.0 = 
+* First stable version released.
