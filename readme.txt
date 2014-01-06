@@ -10,6 +10,7 @@ License: GPLv2 or later
 
 Adds a list of stylesheets in the frontend to allow visitors to choose a different visual look for the website.
 
+
 == Description ==
 
 Sometimes, we just want to offer visitors simple variations of our website theme. Sometimes, we simply want to offer a stylesheet with improved accessbility. There are plugins that let you choose a different theme, but this plugin offers you to change only the stylesheet. In the admin settings, you can configure as many different stylesheets as you want. Those possibilities are offered in a list on the front page.
@@ -18,7 +19,7 @@ The list of available stylesheets can be shown in a dropdown list or as a series
 
 On the frontend, when a choice is made in the dropdown list, the webpage is reloaded using the chosen stylesheet.
 
-Features
+= Plugin Features =
 * Easy installation/setup
 * Any number of stylesheet options
 * Set a default stylesheet
@@ -27,6 +28,7 @@ Features
 * Can be used with a shortcode in a post/page, with the widget and with a php function in the theme
 * For each list, possibility to show/hide the title
 * Complete uninstall (removes options and widgets)
+
 
 == Installation ==
 
@@ -37,23 +39,23 @@ Features
 5. Tell Wordpress to show the stylesheet list by adding the shortcode [wp_user_stylesheet_switcher] in a page/post or put the widget in a sidebar. Alternatively, you can use the php function show_wp_user_stylesheet_switcher() in your theme, for example to have the list in the footer on every pages of your website (see details below).
 6. If using icons, customize the look of the list in the CSS files.
 
-Options for the shortcode
+= Options for the shortcode  =
 * list_title : Used to set a title to the list of stylesheets
 * list_type : Select between "dropdown" or "icon". The dropdown list is set by default.
 * show_list_title : Set to "false" if you don't want any list title. "true" by default.
 
-Example : [wp_user_stylesheet_switcher list_title="Les styles en icons " list_type="icon" show_list_title="false"]
+Example : `[wp_user_stylesheet_switcher list_title="Les styles en icons " list_type="icon" show_list_title="false"]`
 
-If using the php function show_wp_user_stylesheet_switcher(), you can customize the list using an array of variables (similar to the shortcode) : array('list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'icon')
+If using the php function show_wp_user_stylesheet_switcher(), you can customize the list using an array of variables (similar to the shortcode) : `array('list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'icon')`
 
-By default <?php show_wp_user_stylesheet_switcher(); ?> will show a dropdown list with the default list title. But you can also pass an array like this :
-<?php show_wp_user_stylesheet_switcher(array('list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'icon'));?>
+By default `<?php show_wp_user_stylesheet_switcher(); ?>` will show a dropdown list with the default list title. But you can also pass an array like this :
+`<?php show_wp_user_stylesheet_switcher(array('list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'icon'));?>`
 
 To customize the icon list, place the icons in your the theme folder (where the CSS are).
 You can give a different look for the icon list for each CSS files.
 If no icon files are specified in the admin settings, the buttons will show the name of the stylesheet.
 
-The CSS classes to use are:
+= CSS classes to use =
 * button.wp_user_stylesheet_switcher_button  : for the general buttons aspect
 * img.wp_user_stylesheet_switcher_icon  : for the image inside the buttons
 * button.wp_user_stylesheet_switcher_button:active  : for the button being pressed
@@ -85,6 +87,7 @@ button.wp_user_stylesheet_switcher_active_option {
 	border-bottom: 3px rgb(185, 50, 7) solid;
 	border-radius: 0px;
 }`
+
 
 == Frequently Asked Questions ==
 = Why this plugin? =

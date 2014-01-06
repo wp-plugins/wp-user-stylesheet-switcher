@@ -2,7 +2,7 @@
 /*
 Plugin Name: WP User Stylesheet Switcher
 Version: v1.0.1
-Plugin URI: http://web.globulesverts.org
+Plugin URI: http://wordpress.org/plugins/wp-user-stylesheet-switcher/
 Author: Stéphane Groleau
 Author URI: http://web.globulesverts.org
 Description: Adds a list of stylesheets in the frontend to allow visitors to choose a different stylesheet.
