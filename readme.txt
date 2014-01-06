@@ -4,7 +4,7 @@ Donate link: http://web.globulesverts.org
 Tags: stylesheet, customize, CSS
 Requires at least: 3.0
 Tested up to: 3.8
-Stable tag: v1.0.0
+Stable tag: v1.0.1
 License: GPLv2 or later
 
 
@@ -34,7 +34,7 @@ Features
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Go in Settings->WP User Stylesheet Switcher to setup the alternative stylesheet files. The CSS files should be in the same folder as the other CSS files. Most commonly, this is the theme folder or the child-theme folder.
 4. Add an optional icon file for each stylesheet if you want to use the icon list instead of the dropdown list
-5. Tell Wordpress to show the stylesheet list by adding the shortcode [wp_user_stylesheet_switcher] in a page/post or put the widget in a sidebar. Alternatively, you can use the php function show_wp_user_stylesheet_switcher() in your theme. For example, put edit you footer.php file and add <?php show_wp_user_stylesheet_switcher();?> near the end to have the dropdown list is the footer of every pages of your website.
+5. Tell Wordpress to show the stylesheet list by adding the shortcode [wp_user_stylesheet_switcher] in a page/post or put the widget in a sidebar. Alternatively, you can use the php function show_wp_user_stylesheet_switcher() in your theme, for example to have the list in the footer on every pages of your website (see details below).
 6. If using icons, customize the look of the list in the CSS files.
 
 Options for the shortcode
@@ -43,6 +43,11 @@ Options for the shortcode
 * show_list_title : Set to "false" if you don't want any list title. "true" by default.
 
 Example : [wp_user_stylesheet_switcher list_title="Les styles en icons " list_type="icon" show_list_title="false"]
+
+If using the php function show_wp_user_stylesheet_switcher(), you can customize the list using an array of variables (similar to the shortcode) : array('list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'icon')
+
+By default <?php show_wp_user_stylesheet_switcher(); ?> will show a dropdown list with the default list title. But you can also pass an array like this :
+<?php show_wp_user_stylesheet_switcher(array('list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'icon'));?>
 
 To customize the icon list, place the icons in your the theme folder (where the CSS are).
 You can give a different look for the icon list for each CSS files.
@@ -54,7 +59,7 @@ The CSS classes to use are:
 * button.wp_user_stylesheet_switcher_button:active  : for the button being pressed
 * button.wp_user_stylesheet_switcher_active_option  : for the active stylesheet
 
-Here an example ;
+Here an example:
 `button.wp_user_stylesheet_switcher_button {
 	padding: 0;
 	margin: 1px;
@@ -81,7 +86,6 @@ button.wp_user_stylesheet_switcher_active_option {
 	border-radius: 0px;
 }`
 
-
 == Frequently Asked Questions ==
 = Why this plugin? =
 
@@ -100,6 +104,9 @@ Then my other files only need to override the original styles.
 3. Dropdown list and icon list visible in the frontend
 
 == Changelog ==
+= 1.0.1 =
+* Set defaults to php function show_wp_user_stylesheet_switcher()
+
 = 1.0.0 =
 * Possibility to choose between an icon list of a dropdown list
 * Add option to the shortcode and the widget
@@ -114,6 +121,9 @@ Then my other files only need to override the original styles.
 
 
 == Upgrade Notice ==
+= 1.0.1 =
+* Set defaults to php function show_wp_user_stylesheet_switcher()
+
 = 1.0.0 =
 * Possibility to choose between an icon list of a dropdown list
 * Add option to the shortcode and the widget

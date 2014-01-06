@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP User Stylesheet Switcher
-Version: v1.0.0
+Version: v1.0.1
 Plugin URI: http://web.globulesverts.org
 Author: Stéphane Groleau
 Author URI: http://web.globulesverts.org
@@ -13,7 +13,7 @@ if(!isset($_SESSION)){
 }	
 
 if (!defined('WP_USER_STYLESHEET_SWITCHER_VERSION'))
-    define('WP_USER_STYLESHEET_SWITCHER_VERSION', '1.0.0');
+    define('WP_USER_STYLESHEET_SWITCHER_VERSION', '1.0.1');
 
 
 /*
@@ -50,7 +50,7 @@ function wp_user_stylesheet_switcher_addcss()
  * Function used directly in php
  * 
  * */
-function show_wp_user_stylesheet_switcher($list_type)
+function show_wp_user_stylesheet_switcher($list_type = array('list_type'=>'dropdown'))
 {
     echo create_wp_user_stylesheet_switcher($list_type);
 }
