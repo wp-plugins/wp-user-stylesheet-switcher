@@ -1,0 +1,112 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WP User Stylesheet Switcher\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-user-stylesheet-switcher\n"
+"POT-Creation-Date: 2014-01-12 17:06:51+00:00\n"
+"PO-Revision-Date: 2014-01-12 12:13-0500\n"
+"Last-Translator: Stéphane Groleau <stefgroleau@gmail.com>\n"
+"Language-Team: Stéphane Groleau <stefgroleau@gmail.com>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-Language: French\n"
+"X-Poedit-Country: CANADA\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-SearchPath-0: /var/www/amelanchier/wp-content/plugins/wp-user-stylesheet-switcher\n"
+
+#: wp_user_stylesheet_switcher.php:204
+msgid "WP User Stylesheet Switcher Options"
+msgstr "Configuration de WP User Stylesheet Switcher"
+
+#: wp_user_stylesheet_switcher.php:215
+msgid "Default label for the public list "
+msgstr "Texte par défaut pour la liste publique"
+
+#: wp_user_stylesheet_switcher.php:222
+msgid "Stylesheet option %d"
+msgstr "Feuille de style %d"
+
+#: wp_user_stylesheet_switcher.php:223
+msgid "Option name "
+msgstr "Nom de l'option"
+
+#: wp_user_stylesheet_switcher.php:224
+msgid "CSS file name (including .CSS extension)"
+msgstr "Nom du fichier CSS (incluant l'extension .CSS)"
+
+#: wp_user_stylesheet_switcher.php:225
+msgid "Optional icon file (.jpg, .gif or .png)"
+msgstr "Fichier d'icône optionel (.jpg, .gif or .png)"
+
+#: wp_user_stylesheet_switcher.php:231
+msgid "+ Add another stylesheet option"
+msgstr "+ Ajouter une autre feuille de style"
+
+#: wp_user_stylesheet_switcher.php:232
+msgid "- Delete last stylesheet option"
+msgstr "- Supprimer la dernière feuille de style"
+
+#: wp_user_stylesheet_switcher.php:237
+msgid "Default stylesheet"
+msgstr "Feuille de style par défaut"
+
+#: wp_user_stylesheet_switcher.php:246
+msgid "To update the content of this dropdown list, update options first"
+msgstr "Pour mettre à jour le contenu de cette liste déroulante, enregistrez d'abord la configuration."
+
+#: wp_user_stylesheet_switcher.php:250
+msgid "Save options"
+msgstr "Enregistrez la configuration"
+
+#: wp_user_stylesheet_switcher.php:253
+msgid "If you use or if you like this plugin, please consider <a href=\"%s\">making a donation</a>. This helps me keep motivation to update and develop plugins. Thanks!"
+msgstr "Si vous utilisez ou si vous aimez cette extension, merci de <a href=\"%s\">faire un don</a>. Cela me motive à continuer le développement et la mise à jour d'extensions."
+
+#: wp_user_stylesheet_switcher.php:262
+msgid "WP User Stylesheet Switcher"
+msgstr "WP User Stylesheet Switcher"
+
+#: wp_user_stylesheet_switcher.php:272
+#: wp_user_stylesheet_switcher.php:375
+msgid "Stylesheet choice"
+msgstr "Choix de feuille de style"
+
+#: wp_user_stylesheet_switcher.php:303
+msgid "Settings"
+msgstr "Configuration"
+
+#: wp_user_stylesheet_switcher.php:337
+msgid "I will not be translated!"
+msgstr "Je ne serai pas traduit!"
+
+#: wp_user_stylesheet_switcher.php:378
+msgid "Widget title"
+msgstr "Titre du widget"
+
+#: wp_user_stylesheet_switcher.php:383
+msgid "Show widget title"
+msgstr "Afficher titre du widget"
+
+#: wp_user_stylesheet_switcher.php:386
+msgid "List title"
+msgstr "Titre de la liste"
+
+#: wp_user_stylesheet_switcher.php:391
+msgid "Show list title"
+msgstr "Afficher titre de la liste"
+
+#: wp_user_stylesheet_switcher.php:394
+msgid "List type"
+msgstr "Type de liste"
+
+#: wp_user_stylesheet_switcher.php:397
+msgid "Dropdown list"
+msgstr "Liste déroulante"
+
+#: wp_user_stylesheet_switcher.php:398
+msgid "Icon list"
+msgstr "Liste d'icônes"
+
