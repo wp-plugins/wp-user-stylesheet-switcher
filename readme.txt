@@ -4,7 +4,7 @@ Donate link: http://web.globulesverts.org
 Tags: stylesheet, customize, CSS
 Requires at least: 3.0
 Tested up to: 3.8
-Stable tag: v1.5.0
+Stable tag: v1.5.1
 License: GPLv2 or later
 
 
@@ -28,6 +28,7 @@ On the frontend, when a choice is made in the dropdown list, the webpage is relo
 * Can be used with a shortcode in a post/page, with the widget and with a php function in the theme
 * For each list, possibility to show/hide the title
 * Ready for internationalization
+* Languages already available : English, French, Spanish
 * Complete uninstall (removes options and widgets)
 
 
@@ -109,6 +110,9 @@ Then my other files only need to override the original styles.
 
 
 == Changelog ==
+= 1.5.1 =
+* Adds Spanish translation
+
 = 1.5.0 =
 * Internationalization of this plugin
 * Internal update toward OOP (class for the plugin and for the widget)
@@ -130,6 +134,9 @@ Then my other files only need to override the original styles.
 
 
 == Upgrade Notice ==
+= 1.5.1 =
+* Adds Spanish translation
+
 = 1.5.0 =
 * Internationalization of this plugin
 * Internal update toward OOP (class for the plugin and for the widget)
