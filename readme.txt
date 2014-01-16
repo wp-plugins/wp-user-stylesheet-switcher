@@ -28,7 +28,7 @@ On the frontend, when a choice is made in the dropdown list, the webpage is relo
 * Can be used with a shortcode in a post/page, with the widget and with a php function in the theme
 * For each list, possibility to show/hide the title
 * Ready for internationalization
-* Languages already available : English, French, Spanish
+* Languages already available : English, French, Spanish (thanks to Andrew Kurtis)
 * Complete uninstall (removes options and widgets)
 
 
