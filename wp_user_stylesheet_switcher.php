@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP User Stylesheet Switcher
-Version: v1.5.1
+Version: v1.5.2
 Plugin URI: http://wordpress.org/plugins/wp-user-stylesheet-switcher/
 Author: Stéphane Groleau
 Author URI: http://web.globulesverts.org
@@ -28,7 +28,7 @@ if(!isset($_SESSION)){
 }	
 
 if (!defined('WP_USER_STYLESHEET_SWITCHER_VERSION'))
-    define('WP_USER_STYLESHEET_SWITCHER_VERSION', '1.5.0');
+    define('WP_USER_STYLESHEET_SWITCHER_VERSION', '1.5.2');
 
 class WPUserStylesheetSwitcher {
 
@@ -50,7 +50,8 @@ class WPUserStylesheetSwitcher {
 					$_SESSION['user_stylesheet_switcher'] = $stylesheet_choice;
 				}
 
-		if ((!is_numeric($stylesheet_choice)) || ($stylesheet_choice < 0) || ($stylesheet_choice > 4)) {
+		$nb_choices = count($settings['options']);
+		if ((!is_numeric($stylesheet_choice)) || ($stylesheet_choice < 0) || ($stylesheet_choice >= $nb_choices)) {
 			$stylesheet_choice = $settings['default'];
 			$_SESSION['user_stylesheet_switcher'] = $stylesheet_choice;
 		}
