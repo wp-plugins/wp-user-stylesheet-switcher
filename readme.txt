@@ -51,7 +51,8 @@ Example : `[wp_user_stylesheet_switcher list_title="Les styles en icons " list_t
 If using the php function show_wp_user_stylesheet_switcher(), you can customize the list using an array of variables (similar to the shortcode) : `array('list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'icon')`
 
 By default `<?php show_wp_user_stylesheet_switcher(); ?>` will show a dropdown list with the default list title. But you can also pass an array like this :
-`<?php show_wp_user_stylesheet_switcher(array('list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'icon'));?>`
+`<?php global $wpUserStylesheetSwitcher;
+$wpUserStylesheetSwitcher->show_wp_user_stylesheet_switcher(array('list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'icon'));?>`
 
 To customize the icon list, place the icons in your the theme folder (where the CSS are).
 You can give a different look for the icon list for each CSS files.
