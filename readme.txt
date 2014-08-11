@@ -3,8 +3,8 @@ Contributors: vgstef
 Donate link: http://web.globulesverts.org
 Tags: stylesheet, customize, CSS
 Requires at least: 3.0
-Tested up to: 3.8
-Stable tag: v1.5.2
+Tested up to: 3.9.2
+Stable tag: v1.5.4
 License: GPLv2 or later
 
 
@@ -27,6 +27,7 @@ On the frontend, when a choice is made in the dropdown list, the webpage is relo
 * Choice between a dropdown or icon list for each list
 * Can be used with a shortcode in a post/page, with the widget and with a php function in the theme
 * For each list, possibility to show/hide the title
+* Optional single switcher button (text or icon)
 * Ready for internationalization
 * Languages already available : English, French, Spanish (thanks to Andrew Kurtis from WebHostingHub)
 * Complete uninstall (removes options and widgets)
@@ -43,7 +44,7 @@ On the frontend, when a choice is made in the dropdown list, the webpage is relo
 
 = Options for the shortcode  =
 * list_title : Used to set a title to the list of stylesheets
-* list_type : Select between "dropdown" or "icon". The dropdown list is set by default.
+* list_type : Select between "dropdown" "icon" or "button". The dropdown list is set by default. "Button" will show only only button to rotate between available stylesheets.
 * show_list_title : Set to "false" if you don't want any list title. "true" by default.
 
 Example : `[wp_user_stylesheet_switcher list_title="Les styles en icons " list_type="icon" show_list_title="false"]`
@@ -111,6 +112,12 @@ Then my other files only need to override the original styles.
 
 
 == Changelog ==
+= 1.5.4 =
+* Add optional single switcher button (with text or icon) to rotate between stylesheets
+* Add option to remove all styles and stylesheets.
+* Increase filename maxlength
+* Change stylesheet priority when loading them.
+
 = 1.5.2 =
 * Fixes default stylesheet with more then five stylesheets
 
