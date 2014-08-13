@@ -1,14 +1,14 @@
 === WP User Stylesheet Switcher ===
 Contributors: vgstef
 Donate link: http://web.globulesverts.org
-Tags: stylesheet, customize, CSS
+Tags: stylesheet, customize, CSS, accessibility, 
 Requires at least: 3.0
 Tested up to: 3.9.2
-Stable tag: v1.5.4
+Stable tag: v1.5.5
 License: GPLv2 or later
 
 
-Adds a list of stylesheets in the frontend to allow visitors to choose a different visual look for the website.
+Adds a list of stylesheets in the frontesnd to allow visitors to choose a different visual look for the website.
 
 
 == Description ==
@@ -32,6 +32,7 @@ On the frontend, when a choice is made in the dropdown list, the webpage is relo
 * Languages already available : English, French, Spanish (thanks to Andrew Kurtis from WebHostingHub)
 * Complete uninstall (removes options and widgets)
 
+To see an example, visit [plugin page](http://web.globulesverts.org/wp-user-stylesheet-switcher).
 
 == Installation ==
 
@@ -58,6 +59,8 @@ $wpUserStylesheetSwitcher->show_wp_user_stylesheet_switcher(array('list_title'=>
 To customize the icon list, place the icons in your the theme folder (where the CSS are).
 You can give a different look for the icon list for each CSS files.
 If no icon files are specified in the admin settings, the buttons will show the name of the stylesheet.
+
+If you want to offer the option of desactivating all stylesheets, you have to add an option give a name to that option and specify a an empty css file in the configuration page. Then, select that option in the droplist "Option to remove stylesheets".
 
 = CSS classes to use =
 * button.wp_user_stylesheet_switcher_button  : for the general buttons aspect
