@@ -115,6 +115,10 @@ Then my other files only need to override the original styles.
 
 
 == Changelog ==
+= 1.5.5 =
+* Fix missing js file
+* Add explanation for the "no stylesheet" option.
+
 = 1.5.4 =
 * Add optional single switcher button (with text or icon) to rotate between stylesheets
 * Add option to remove all styles and stylesheets.
