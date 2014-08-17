@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP User Stylesheet Switcher
-Version: v1.5.5
+Version: v1.5.6
 Plugin URI: http://wordpress.org/plugins/wp-user-stylesheet-switcher/
 Author: Stéphane Groleau
 Author URI: http://web.globulesverts.org
@@ -28,7 +28,7 @@ if(!isset($_SESSION)){
 }	
 
 if (!defined('WP_USER_STYLESHEET_SWITCHER_VERSION'))
-    define('WP_USER_STYLESHEET_SWITCHER_VERSION', '1.5.5');
+    define('WP_USER_STYLESHEET_SWITCHER_VERSION', '1.5.6');
 
 class WPUserStylesheetSwitcher {
 
@@ -229,8 +229,15 @@ class WPUserStylesheetSwitcher {
 				$nbStylesheets++;
 			}
 			
-			$settings['remove'] = $_POST["wp_user_stylesheet_switcher_remove_stylesheets"];
-			$settings['button_icon_file'] = $_POST["wp_user_stylesheet_switcher_button_icon_file"];
+			if (isset($_POST["wp_user_stylesheet_switcher_remove_stylesheets"]))
+				$settings['remove'] = $_POST["wp_user_stylesheet_switcher_remove_stylesheets"];
+			else
+				$settings['remove'] = "-1";
+			
+			if (isset($_POST["wp_user_stylesheet_switcher_button_icon_file"]))
+				$settings['button_icon_file'] = $_POST["wp_user_stylesheet_switcher_button_icon_file"];
+			else
+				$settings['button_icon_file'] = "";
 			
 			update_option('wp_user_stylesheet_switcher_settings', $settings);
 		}
@@ -287,11 +294,11 @@ class WPUserStylesheetSwitcher {
 		echo '<option value="-1"></option>';
 		$noOption=0;
 		foreach ($settings['options'] as $option) {	
-			if (($option['file'] != '') && (($option['name'] != '')))
+			if ($option['name'] != '')
 				echo '<option '.($settings['remove']==$noOption?'selected="selected"':"").' value="'.$noOption.'">'.$option['name'].'</option>';
 			$noOption++;
 		}
-		echo '</select><em> '.(__("To update the content of this dropdown list, update options first", "wp-user-stylesheet-switcher")).'</em></td>
+		echo '</select><em> '.(__("Leave it blank if you don't want to offer the option to remove all stylesheet. Otherwise, choose the option associated with no stylesheet. To update the content of this dropdown list, update options first. ", "wp-user-stylesheet-switcher")).'</em></td>
 		</tr>';
 		
 		echo '<tr><th scope="row"><label for="wp_user_stylesheet_switcher_icon">'.(__("Optional icon file for single switcher button (.jpg, .gif or .png)", "wp-user-stylesheet-switcher")).'</label></th><td><input type="text" name="wp_user_stylesheet_switcher_button_icon_file" value="'.$settings['button_icon_file'].'" size="20" maxlength="250"/></td></tr>

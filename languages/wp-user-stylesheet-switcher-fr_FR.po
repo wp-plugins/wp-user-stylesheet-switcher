@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP User Stylesheet Switcher\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-user-stylesheet-switcher\n"
-"POT-Creation-Date: 2014-08-11 16:10-0500\n"
-"PO-Revision-Date: 2014-08-11 16:25-0500\n"
+"POT-Creation-Date: 2014-08-16 21:29-0500\n"
+"PO-Revision-Date: 2014-08-16 21:30-0500\n"
 "Last-Translator: Stéphane Groleau <stefgroleau@gmail.com>\n"
 "Language-Team: Stéphane Groleau <stefgroleau@gmail.com>\n"
 "Language: fr_CA\n"
@@ -16,62 +16,73 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: wp_user_stylesheet_switcher.php:238
+#: wp_user_stylesheet_switcher.php:245
 msgid "WP User Stylesheet Switcher Options"
 msgstr "Configuration de WP User Stylesheet Switcher"
 
-#: wp_user_stylesheet_switcher.php:249
+#: wp_user_stylesheet_switcher.php:256
 msgid "Default label for the public list "
 msgstr "Texte par défaut pour la liste publique"
 
-#: wp_user_stylesheet_switcher.php:257
+#: wp_user_stylesheet_switcher.php:264
 #, php-format
 msgid "Stylesheet option %d"
 msgstr "Feuille de style %d"
 
-#: wp_user_stylesheet_switcher.php:258
+#: wp_user_stylesheet_switcher.php:265
 msgid "Option name "
 msgstr "Nom de l'option"
 
-#: wp_user_stylesheet_switcher.php:259
+#: wp_user_stylesheet_switcher.php:266
 msgid "CSS file name (including .CSS extension)"
 msgstr "Nom du fichier CSS (incluant l'extension .CSS)"
 
-#: wp_user_stylesheet_switcher.php:260
+#: wp_user_stylesheet_switcher.php:267
 msgid "Optional icon file (.jpg, .gif or .png)"
 msgstr "Fichier d'icône optionel (.jpg, .gif or .png)"
 
-#: wp_user_stylesheet_switcher.php:266
+#: wp_user_stylesheet_switcher.php:273
 msgid "+ Add another stylesheet option"
 msgstr "+ Ajouter une autre feuille de style"
 
-#: wp_user_stylesheet_switcher.php:267
+#: wp_user_stylesheet_switcher.php:274
 msgid "- Delete last stylesheet option"
 msgstr "- Supprimer la dernière feuille de style"
 
-#: wp_user_stylesheet_switcher.php:272
+#: wp_user_stylesheet_switcher.php:279
 msgid "Default stylesheet"
 msgstr "Feuille de style par défaut"
 
-#: wp_user_stylesheet_switcher.php:281 wp_user_stylesheet_switcher.php:294
+#: wp_user_stylesheet_switcher.php:288
 msgid "To update the content of this dropdown list, update options first"
 msgstr ""
 "Pour mettre à jour le contenu de cette liste déroulante, enregistrez d'abord "
 "la configuration."
 
-#: wp_user_stylesheet_switcher.php:285
+#: wp_user_stylesheet_switcher.php:292
 msgid "Option to remove stylesheets"
 msgstr "Option pour désactiver les feuilles de style"
 
-#: wp_user_stylesheet_switcher.php:297
+#: wp_user_stylesheet_switcher.php:301
+msgid ""
+"Leave it blank if you don't want to offer the option to remove all "
+"stylesheet. Otherwise, choose the option associated with no stylesheet. To "
+"update the content of this dropdown list, update options first. "
+msgstr ""
+"Laissez vide si vous ne voulez pas offrir d'option sans feuille de style. "
+"Autrement, choisissez l'option associée à l'absence de feuille de style. "
+"Pour mettre à jour le contenu de cette liste déroulante, enregistrez d'abord "
+"la configuration."
+
+#: wp_user_stylesheet_switcher.php:304
 msgid "Optional icon file for single switcher button (.jpg, .gif or .png)"
 msgstr "Fichier d'icône optionel pour le bouton unique (.jpg, .gif or .png)"
 
-#: wp_user_stylesheet_switcher.php:300
+#: wp_user_stylesheet_switcher.php:307
 msgid "Save options"
 msgstr "Enregistrez la configuration"
 
-#: wp_user_stylesheet_switcher.php:303
+#: wp_user_stylesheet_switcher.php:310
 #, php-format
 msgid ""
 "If you use or if you like this plugin, please consider <a href=\"%s\">making "
@@ -82,50 +93,50 @@ msgstr ""
 "\">faire un don</a>. Cela me motive à continuer le développement et la mise "
 "à jour d'extensions."
 
-#: wp_user_stylesheet_switcher.php:312
+#: wp_user_stylesheet_switcher.php:319
 msgid "WP User Stylesheet Switcher"
 msgstr "WP User Stylesheet Switcher"
 
-#: wp_user_stylesheet_switcher.php:322 wp_user_stylesheet_switcher.php:429
+#: wp_user_stylesheet_switcher.php:329 wp_user_stylesheet_switcher.php:436
 msgid "Stylesheet choice"
 msgstr "Choix de feuille de style"
 
-#: wp_user_stylesheet_switcher.php:356
+#: wp_user_stylesheet_switcher.php:363
 msgid "Settings"
 msgstr "Configuration"
 
-#: wp_user_stylesheet_switcher.php:390
+#: wp_user_stylesheet_switcher.php:397
 msgid "I will not be translated!"
 msgstr "Je ne serai pas traduit!"
 
-#: wp_user_stylesheet_switcher.php:432
+#: wp_user_stylesheet_switcher.php:439
 msgid "Widget title"
 msgstr "Titre du widget"
 
-#: wp_user_stylesheet_switcher.php:437
+#: wp_user_stylesheet_switcher.php:444
 msgid "Show widget title"
 msgstr "Afficher titre du widget"
 
-#: wp_user_stylesheet_switcher.php:440
+#: wp_user_stylesheet_switcher.php:447
 msgid "List title"
 msgstr "Titre de la liste"
 
-#: wp_user_stylesheet_switcher.php:445
+#: wp_user_stylesheet_switcher.php:452
 msgid "Show list title"
 msgstr "Afficher titre de la liste"
 
-#: wp_user_stylesheet_switcher.php:448
+#: wp_user_stylesheet_switcher.php:455
 msgid "List type"
 msgstr "Type de liste"
 
-#: wp_user_stylesheet_switcher.php:451
+#: wp_user_stylesheet_switcher.php:458
 msgid "Dropdown list"
 msgstr "Liste déroulante"
 
-#: wp_user_stylesheet_switcher.php:452
+#: wp_user_stylesheet_switcher.php:459
 msgid "Icon list"
 msgstr "Liste d'icônes"
 
-#: wp_user_stylesheet_switcher.php:453
+#: wp_user_stylesheet_switcher.php:460
 msgid "Switcher button"
 msgstr "Bouton unique"

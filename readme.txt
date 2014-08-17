@@ -4,7 +4,7 @@ Donate link: http://web.globulesverts.org
 Tags: stylesheet, customize, CSS, accessibility, 
 Requires at least: 3.0
 Tested up to: 3.9.2
-Stable tag: v1.5.5
+Stable tag: v1.5.6
 License: GPLv2 or later
 
 
@@ -115,6 +115,10 @@ Then my other files only need to override the original styles.
 
 
 == Changelog ==
+= 1.5.6 =
+* Fix blank page when upgrading
+* Add information to "Option to remove stylesheets"
+
 = 1.5.5 =
 * Fix missing js file
 * Add explanation for the "no stylesheet" option.
