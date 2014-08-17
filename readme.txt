@@ -48,13 +48,13 @@ To see an example, visit [plugin page](http://web.globulesverts.org/wp-user-styl
 * list_type : Select between "dropdown" "icon" or "button". The dropdown list is set by default. "Button" will show only only button to rotate between available stylesheets.
 * show_list_title : Set to "false" if you don't want any list title. "true" by default.
 
-Example : `[wp_user_stylesheet_switcher list_title="Les styles en icons " list_type="icon" show_list_title="false"]`
+Example : `[wp_user_stylesheet_switcher list_title="Available styles" list_type="icon" show_list_title="false"]`
 
 If using the php function show_wp_user_stylesheet_switcher(), you can customize the list using an array of variables (similar to the shortcode) : `array('list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'icon')`
 
 By default `<?php show_wp_user_stylesheet_switcher(); ?>` will show a dropdown list with the default list title. But you can also pass an array like this :
 `<?php global $wpUserStylesheetSwitcher;
-$wpUserStylesheetSwitcher->show_wp_user_stylesheet_switcher(array('list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'icon'));?>`
+$wpUserStylesheetSwitcher->show_wp_user_stylesheet_switcher(array('list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'dropdown'));?>`
 
 To customize the icon list, place the icons in your the theme folder (where the CSS are).
 You can give a different look for the icon list for each CSS files.
@@ -115,6 +115,9 @@ Then my other files only need to override the original styles.
 
 
 == Changelog ==
+= 1.5.7 =
+* Ignore empty options when using single switcher button
+
 = 1.5.6 =
 * Fix blank page when upgrading
 * Add information to "Option to remove stylesheets"

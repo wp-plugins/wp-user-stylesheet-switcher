@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP User Stylesheet Switcher
-Version: v1.5.6
+Version: v1.5.7
 Plugin URI: http://wordpress.org/plugins/wp-user-stylesheet-switcher/
 Author: Stéphane Groleau
 Author URI: http://web.globulesverts.org
@@ -28,9 +28,22 @@ if(!isset($_SESSION)){
 }	
 
 if (!defined('WP_USER_STYLESHEET_SWITCHER_VERSION'))
-    define('WP_USER_STYLESHEET_SWITCHER_VERSION', '1.5.6');
+    define('WP_USER_STYLESHEET_SWITCHER_VERSION', '1.5.7');
 
 class WPUserStylesheetSwitcher {
+
+	/*
+	 * Counts the number of valid options
+	 * 
+	 * */
+	function count_options($options)
+	{
+		$nb = 0;
+		foreach ($options as $option)
+			if (($option["name"] != "") && ($option["file"] != ""))
+				$nb++;
+		return $nb;
+	}
 
 	/*
 	 * Adds the selected stylesheet file to the header
@@ -50,14 +63,14 @@ class WPUserStylesheetSwitcher {
 					$_SESSION['user_stylesheet_switcher'] = $stylesheet_choice;
 				}
 
-		$nb_choices = count($settings['options']);
+		$nb_choices = $this->count_options($settings['options']);
 		if ((!is_numeric($stylesheet_choice)) || ($stylesheet_choice < 0) || ($stylesheet_choice >= $nb_choices)) {
 			$stylesheet_choice = $settings['default'];
 			$_SESSION['user_stylesheet_switcher'] = $stylesheet_choice;
 		}
-
+		
 		$fileCSS = $settings['options'][$stylesheet_choice]['file'];
-
+		
 		wp_register_style( 'wp_user_stylesheet_switcher_'.$fileCSS, get_stylesheet_directory_uri().'/'.$fileCSS );
 		wp_enqueue_style( 'wp_user_stylesheet_switcher_'.$fileCSS);
 	}
@@ -122,7 +135,7 @@ class WPUserStylesheetSwitcher {
 			if (("true" == $attributes['show_list_title']) || ("on" == $attributes['show_list_title'])) $output .= $attributes['list_title'];
 		
 			$newStyleSheet = $stylesheet_choice + 1;
-			if ($newStyleSheet > count($settings['options']))
+			if ($newStyleSheet >= $this->count_options($settings['options']))
 				$newStyleSheet = 0;
 				
 			$output .= '<button class="wp_user_stylesheet_switcher_button" id="wp_user_stylesheet_switcher_button'.$newStyleSheet.'" type="submit" name="user_stylesheet_choice" value="'.$newStyleSheet.'" title="'.$attributes['list_title'].'">';
@@ -132,7 +145,7 @@ class WPUserStylesheetSwitcher {
 			else
 				$output .= $attributes['list_title'];
 			
-			$output .= '</button><input type="hidden" name="wp_user_stylesheet_switcher_list_type" value="icon"></form></span>';	
+			$output .= '</button><input type="hidden" name="wp_user_stylesheet_switcher_list_type" value="button"></form></span>';	
 		}
 		else
 		{
@@ -190,7 +203,7 @@ class WPUserStylesheetSwitcher {
 			$settings['version'] = WP_USER_STYLESHEET_SWITCHER_VERSION;
 			update_option('wp_user_stylesheet_switcher_settings', $settings);
 		}
-		$nbStylesheets = count($settings['options']);
+		$nbStylesheets = $this->count_options($settings['options']);
 		
 		if ((isset($_POST['info_update'])) || (isset($_POST['add_stylesheet_option'])) || (isset($_POST['delete_last_stylesheet_option'])))
 		{
