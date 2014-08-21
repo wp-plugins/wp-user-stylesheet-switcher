@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP User Stylesheet Switcher
-Version: v1.5.7
+Version: v1.5.8
 Plugin URI: http://wordpress.org/plugins/wp-user-stylesheet-switcher/
 Author: Stéphane Groleau
 Author URI: http://web.globulesverts.org
@@ -28,7 +28,7 @@ if(!isset($_SESSION)){
 }	
 
 if (!defined('WP_USER_STYLESHEET_SWITCHER_VERSION'))
-    define('WP_USER_STYLESHEET_SWITCHER_VERSION', '1.5.7');
+    define('WP_USER_STYLESHEET_SWITCHER_VERSION', '1.5.8');
 
 class WPUserStylesheetSwitcher {
 
@@ -203,7 +203,7 @@ class WPUserStylesheetSwitcher {
 			$settings['version'] = WP_USER_STYLESHEET_SWITCHER_VERSION;
 			update_option('wp_user_stylesheet_switcher_settings', $settings);
 		}
-		$nbStylesheets = $this->count_options($settings['options']);
+		$nbStylesheets = count($settings['options']);
 		
 		if ((isset($_POST['info_update'])) || (isset($_POST['add_stylesheet_option'])) || (isset($_POST['delete_last_stylesheet_option'])))
 		{
@@ -212,8 +212,16 @@ class WPUserStylesheetSwitcher {
 				wp_die('Error! Nonce Security Check Failed! Go back to settings menu and save the settings again.');
 			}
 
-			$settings['title'] = $_POST["wp_user_stylesheet_switcher_title"];
-			$settings['default'] = $_POST["wp_user_stylesheet_switcher_default"];
+			if (isset($_POST["wp_user_stylesheet_switcher_title"]))
+				$settings['title'] = $_POST["wp_user_stylesheet_switcher_title"];
+			else
+				$settings['title'] =  __("Stylesheet choice", "wp-user-stylesheet-switcher");
+			
+			if (isset($_POST["wp_user_stylesheet_switcher_default"]))
+				$settings['default'] = $_POST["wp_user_stylesheet_switcher_default"];
+			else
+				$settings['default'] = "";
+			
 			$nbStylesheets = intval($_POST["wp_user_stylesheet_switcher_number"]);
 			
 			if (isset($_POST['delete_last_stylesheet_option']) && ($nbStylesheets > 1)) 

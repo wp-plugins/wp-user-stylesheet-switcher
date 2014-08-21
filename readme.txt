@@ -4,7 +4,7 @@ Donate link: http://web.globulesverts.org
 Tags: stylesheet, customize, CSS, accessibility, 
 Requires at least: 3.0
 Tested up to: 3.9.2
-Stable tag: v1.5.6
+Stable tag: v1.5.8
 License: GPLv2 or later
 
 
@@ -115,6 +115,9 @@ Then my other files only need to override the original styles.
 
 
 == Changelog ==
+= 1.5.8 =
+* Fix blank option update in config page
+
 = 1.5.7 =
 * Ignore empty options when using single switcher button
 
