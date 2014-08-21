@@ -1,38 +1,99 @@
 === WP User Stylesheet Switcher ===
 Contributors: vgstef
 Donate link: http://web.globulesverts.org
-Tags: stylesheet, customize, CSS
+Tags: stylesheet, customize, CSS, accessibility, 
 Requires at least: 3.0
-Tested up to: 3.8
-Stable tag: v0.2.0
+Tested up to: 3.9.2
+Stable tag: v1.5.8
 License: GPLv2 or later
 
 
-Adds a dropdown list in the frontend to allow visitors to choose a different stylesheet.
+Adds a list of stylesheets in the frontesnd to allow visitors to choose a different visual look for the website.
+
 
 == Description ==
 
-Sometimes, we just want to offer visitors simple variations of our website theme. Sometimes, we simply want to offer a stylesheet with improved accessbility. There are plugins that let you choose a different theme, but this plugin offers you to change only the stylesheet. In the admin settings, you can configure up to 5 different stylesheets. Those possibilities are offered in a dropdown list on the front page.
+Sometimes, we just want to offer visitors simple variations of our website theme. Sometimes, we simply want to offer a stylesheet with improved accessbility. There are plugins that let you choose a different theme, but this plugin offers you to change only the stylesheet. In the admin settings, you can configure as many different stylesheets as you want. Those possibilities are offered in a list on the front page.
 
-The dropdown list can be put in a widget or in a page/post using the shortcode, or directly in the template using the php function.
+The list of available stylesheets can be shown in a dropdown list or as a series of icons. It can be shown using the widget or in a page/post using the shortcode, or directly in the template using the php function.
 
-On the frontend, when a choice is made in the dropdown list, the webpage is reload using the chosen stylesheet.
+On the frontend, when a choice is made in the dropdown list, the webpage is reloaded using the chosen stylesheet.
 
-Features
+= Plugin Features =
 * Easy installation/setup
-* Up to 5 different stylesheets
+* Any number of stylesheet options
 * Set a default stylesheet
-* Set the label for the dropdown list
-* Can be used with a shortcode in a post/page, as a widget and with a php function in the theme
-* Multiple instances of the dropdown list can be present on the same page.
+* Multiple instances of stylesheet lists can be present on the same page.
+* Choice between a dropdown or icon list for each list
+* Can be used with a shortcode in a post/page, with the widget and with a php function in the theme
+* For each list, possibility to show/hide the title
+* Optional single switcher button (text or icon)
+* Ready for internationalization
+* Languages already available : English, French, Spanish (thanks to Andrew Kurtis from WebHostingHub)
+* Complete uninstall (removes options and widgets)
 
+To see an example, visit [plugin page](http://web.globulesverts.org/wp-user-stylesheet-switcher).
 
 == Installation ==
 
 1. Place the wp_user_stylesheet_switcher folder in the wp-content/plugins folder.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Go in Settings->WP User Stylesheet Switcher to setup the alternative stylesheet files. The CSS files should be in the same folder as the other CSS files. Most commonly, this is the theme folder or the child-theme folder.
-4. Tell wordpress to show the dropdown list by adding the shortcode [wp_user_stylesheet_switcher] in a page/post or put the widget in a sidebar. Alternatively, you can use the php function show_wp_user_stylesheet_switcher() in your theme. For example, put edit you footer.php file and add <?php show_wp_user_stylesheet_switcher();?> near the end to have the dropdown list is the footer of every pages of your website.
+4. Add an optional icon file for each stylesheet if you want to use the icon list instead of the dropdown list
+5. Tell Wordpress to show the stylesheet list by adding the shortcode [wp_user_stylesheet_switcher] in a page/post or put the widget in a sidebar. Alternatively, you can use the php function show_wp_user_stylesheet_switcher() in your theme, for example to have the list in the footer on every pages of your website (see details below).
+6. If using icons, customize the look of the list in the CSS files.
+
+= Options for the shortcode  =
+* list_title : Used to set a title to the list of stylesheets
+* list_type : Select between "dropdown" "icon" or "button". The dropdown list is set by default. "Button" will show only only button to rotate between available stylesheets.
+* show_list_title : Set to "false" if you don't want any list title. "true" by default.
+
+Example : `[wp_user_stylesheet_switcher list_title="Available styles" list_type="icon" show_list_title="false"]`
+
+If using the php function show_wp_user_stylesheet_switcher(), you can customize the list using an array of variables (similar to the shortcode) : `array('list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'icon')`
+
+By default `<?php show_wp_user_stylesheet_switcher(); ?>` will show a dropdown list with the default list title. But you can also pass an array like this :
+`<?php global $wpUserStylesheetSwitcher;
+$wpUserStylesheetSwitcher->show_wp_user_stylesheet_switcher(array('list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'dropdown'));?>`
+
+To customize the icon list, place the icons in your the theme folder (where the CSS are).
+You can give a different look for the icon list for each CSS files.
+If no icon files are specified in the admin settings, the buttons will show the name of the stylesheet.
+
+If you want to offer the option of desactivating all stylesheets, you have to add an option give a name to that option and specify a an empty css file in the configuration page. Then, select that option in the droplist "Option to remove stylesheets".
+
+= CSS classes to use =
+* button.wp_user_stylesheet_switcher_button  : for the general buttons aspect
+* img.wp_user_stylesheet_switcher_icon  : for the image inside the buttons
+* button.wp_user_stylesheet_switcher_button:active  : for the button being pressed
+* button.wp_user_stylesheet_switcher_active_option  : for the active stylesheet
+
+Here an example:
+`button.wp_user_stylesheet_switcher_button {
+	padding: 0;
+	margin: 1px;
+	border: none;
+}
+
+img.wp_user_stylesheet_switcher_icon {
+	border: none;
+	padding: 0px;
+	margin: 0px;
+	width: 30px;
+	height: 30px;
+	vertical-align:middle;
+}
+
+button.wp_user_stylesheet_switcher_button:active {
+	padding: 0;
+	margin: 1px;
+}
+
+button.wp_user_stylesheet_switcher_active_option {
+	padding-bottom: 1px;
+	border-bottom: 3px rgb(185, 50, 7) solid;
+	border-radius: 0px;
+}`
 
 
 == Frequently Asked Questions ==
@@ -49,9 +110,50 @@ Then my other files only need to override the original styles.
 
 == Screenshots ==
 1. Setup page in admin->settings
-2. Dropdown list visible in the Frontend.
+2. Widget options
+3. Dropdown list and icon list visible in the frontend
+
 
 == Changelog ==
+= 1.5.8 =
+* Fix blank option update in config page
+
+= 1.5.7 =
+* Ignore empty options when using single switcher button
+
+= 1.5.6 =
+* Fix blank page when upgrading
+* Add information to "Option to remove stylesheets"
+
+= 1.5.5 =
+* Fix missing js file
+* Add explanation for the "no stylesheet" option.
+
+= 1.5.4 =
+* Add optional single switcher button (with text or icon) to rotate between stylesheets
+* Add option to remove all styles and stylesheets.
+* Increase filename maxlength
+* Change stylesheet priority when loading them.
+
+= 1.5.2 =
+* Fixes default stylesheet with more then five stylesheets
+
+= 1.5.1 =
+* Adds Spanish translation
+
+= 1.5.0 =
+* Internationalization of this plugin
+* Internal update toward OOP (class for the plugin and for the widget)
+
+= 1.0.1 =
+* Set defaults to php function show_wp_user_stylesheet_switcher()
+
+= 1.0.0 =
+* Possibility to choose between an icon list of a dropdown list
+* Add option to the shortcode and the widget
+* Fixes layout positioning bug with Twentythirteen theme
+* Manage uninstall to remove options/widgets
+
 = 0.2.0 =
 * No limits for the number of stylesheets to offer.
 
@@ -60,6 +162,25 @@ Then my other files only need to override the original styles.
 
 
 == Upgrade Notice ==
+= 1.5.2 =
+* Fixes default stylesheet with more then five stylesheets
+
+= 1.5.1 =
+* Adds Spanish translation
+
+= 1.5.0 =
+* Internationalization of this plugin
+* Internal update toward OOP (class for the plugin and for the widget)
+
+= 1.0.1 =
+* Set defaults to php function show_wp_user_stylesheet_switcher()
+
+= 1.0.0 =
+* Possibility to choose between an icon list of a dropdown list
+* Add option to the shortcode and the widget
+* Fixes layout positioning bug with Twentythirteen theme
+* Manage uninstall to remove options/widgets
+
 = 0.2.0 =
 * No limits for the number of stylesheets to offer.
 
