@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP User Stylesheet Switcher\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-user-stylesheet-switcher\n"
-"POT-Creation-Date: 2014-08-16 21:29-0500\n"
-"PO-Revision-Date: 2014-08-16 21:29-0500\n"
+"POT-Creation-Date: 2014-09-06 02:09-0500\n"
+"PO-Revision-Date: 2014-09-06 02:09-0500\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Globules Verts <web.globulesverts.org>\n"
 "Language: English\n"
@@ -17,67 +17,126 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: wp_user_stylesheet_switcher.php:245
+#: wp_user_stylesheet_switcher.php:312 wp_user_stylesheet_switcher.php:478
+#: wp_user_stylesheet_switcher.php:594
+msgid "Stylesheet choice"
+msgstr ""
+
+#: wp_user_stylesheet_switcher.php:372
 msgid "WP User Stylesheet Switcher Options"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:256
+#: wp_user_stylesheet_switcher.php:383
 msgid "Default label for the public list "
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:264
+#: wp_user_stylesheet_switcher.php:387
+msgid "Folder path for CSS and icons files"
+msgstr ""
+
+#: wp_user_stylesheet_switcher.php:389
+msgid "Relative to theme path"
+msgstr ""
+
+#: wp_user_stylesheet_switcher.php:390
+msgid "Absolute path (not recommended)"
+msgstr ""
+
+#: wp_user_stylesheet_switcher.php:398
 #, php-format
 msgid "Stylesheet option %d"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:265
+#: wp_user_stylesheet_switcher.php:399
 msgid "Option name "
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:266
+#: wp_user_stylesheet_switcher.php:400
 msgid "CSS file name (including .CSS extension)"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:267
+#: wp_user_stylesheet_switcher.php:401
 msgid "Optional icon file (.jpg, .gif or .png)"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:273
+#: wp_user_stylesheet_switcher.php:407
 msgid "+ Add another stylesheet option"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:274
+#: wp_user_stylesheet_switcher.php:408
 msgid "- Delete last stylesheet option"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:279
+#: wp_user_stylesheet_switcher.php:413
 msgid "Default stylesheet"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:288
+#: wp_user_stylesheet_switcher.php:422
 msgid "To update the content of this dropdown list, update options first"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:292
+#: wp_user_stylesheet_switcher.php:426
+msgid "Automatic stylesheet rotation "
+msgstr ""
+
+#: wp_user_stylesheet_switcher.php:427
+msgid "Change stylesheet each "
+msgstr ""
+
+#: wp_user_stylesheet_switcher.php:429
+msgid "None"
+msgstr ""
+
+#: wp_user_stylesheet_switcher.php:430
+msgid "Weekday"
+msgstr ""
+
+#: wp_user_stylesheet_switcher.php:431
+msgid "Week"
+msgstr ""
+
+#: wp_user_stylesheet_switcher.php:432
+msgid "Month"
+msgstr ""
+
+#: wp_user_stylesheet_switcher.php:433
+msgid "Season"
+msgstr ""
+
+#: wp_user_stylesheet_switcher.php:434
+msgid "Year"
+msgstr ""
+
+#: wp_user_stylesheet_switcher.php:435
+msgid "Random"
+msgstr ""
+
+#: wp_user_stylesheet_switcher.php:436
+msgid ""
+"The present stylesheet (ie. for the current month) is set with Default "
+"stylesheet."
+msgstr ""
+
+#: wp_user_stylesheet_switcher.php:441
 msgid "Option to remove stylesheets"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:301
+#: wp_user_stylesheet_switcher.php:450
 msgid ""
 "Leave it blank if you don't want to offer the option to remove all "
 "stylesheet. Otherwise, choose the option associated with no stylesheet. To "
 "update the content of this dropdown list, update options first. "
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:304
+#: wp_user_stylesheet_switcher.php:453
 msgid "Optional icon file for single switcher button (.jpg, .gif or .png)"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:307
+#: wp_user_stylesheet_switcher.php:456
 msgid "Save options"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:310
+#: wp_user_stylesheet_switcher.php:459
 #, php-format
 msgid ""
 "If you use or if you like this plugin, please consider <a href=\"%s\">making "
@@ -85,50 +144,46 @@ msgid ""
 "Thanks!"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:319
+#: wp_user_stylesheet_switcher.php:468
 msgid "WP User Stylesheet Switcher"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:329 wp_user_stylesheet_switcher.php:436
-msgid "Stylesheet choice"
-msgstr ""
-
-#: wp_user_stylesheet_switcher.php:363
+#: wp_user_stylesheet_switcher.php:513
 msgid "Settings"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:397
+#: wp_user_stylesheet_switcher.php:555
 msgid "I will not be translated!"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:439
+#: wp_user_stylesheet_switcher.php:597
 msgid "Widget title"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:444
+#: wp_user_stylesheet_switcher.php:602
 msgid "Show widget title"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:447
+#: wp_user_stylesheet_switcher.php:605
 msgid "List title"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:452
+#: wp_user_stylesheet_switcher.php:610
 msgid "Show list title"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:455
+#: wp_user_stylesheet_switcher.php:613
 msgid "List type"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:458
+#: wp_user_stylesheet_switcher.php:616
 msgid "Dropdown list"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:459
+#: wp_user_stylesheet_switcher.php:617
 msgid "Icon list"
 msgstr ""
 
-#: wp_user_stylesheet_switcher.php:460
+#: wp_user_stylesheet_switcher.php:618
 msgid "Switcher button"
 msgstr ""

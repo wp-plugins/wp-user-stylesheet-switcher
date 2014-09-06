@@ -1,10 +1,10 @@
 === WP User Stylesheet Switcher ===
 Contributors: vgstef
 Donate link: http://web.globulesverts.org
-Tags: stylesheet, customize, CSS, accessibility, 
+Tags: stylesheet, customize, CSS, accessibility, multisite
 Requires at least: 3.0
-Tested up to: 3.9.2
-Stable tag: v1.5.8
+Tested up to: 4.0
+Stable tag: v1.6.0
 License: GPLv2 or later
 
 
@@ -28,6 +28,8 @@ On the frontend, when a choice is made in the dropdown list, the webpage is relo
 * Can be used with a shortcode in a post/page, with the widget and with a php function in the theme
 * For each list, possibility to show/hide the title
 * Optional single switcher button (text or icon)
+* Chose between theme relative path or absolute path (useful to customize multisite)
+* Optional automatic theme rotation (weekday, week, month, year or random)
 * Ready for internationalization
 * Languages already available : English, French, Spanish (thanks to Andrew Kurtis from WebHostingHub)
 * Complete uninstall (removes options and widgets)
@@ -61,6 +63,14 @@ You can give a different look for the icon list for each CSS files.
 If no icon files are specified in the admin settings, the buttons will show the name of the stylesheet.
 
 If you want to offer the option of desactivating all stylesheets, you have to add an option give a name to that option and specify a an empty css file in the configuration page. Then, select that option in the droplist "Option to remove stylesheets".
+
+= Automatic stylesheet rotation =
+This option offer to possibility to automatically change the stylesheet. There are different options (weekday, week, month, year or random)
+
+The switcher will simply rotate one stylesheet after the other. So if you want a different stylesheet for each season, setup 4 different stylesheet options and set the default to the actual season.
+
+If you don't want any automatic rotation (default), select "none".
+
 
 = CSS classes to use =
 * button.wp_user_stylesheet_switcher_button  : for the general buttons aspect
@@ -115,6 +125,12 @@ Then my other files only need to override the original styles.
 
 
 == Changelog ==
+= 1.6.0 =
+* Fix session start condition
+* Option to have automatic theme rotation
+* Option to chose between relative or absolu path (useful for multisites)
+* Add plugin icon and banner
+
 = 1.5.8 =
 * Fix blank option update in config page
 
