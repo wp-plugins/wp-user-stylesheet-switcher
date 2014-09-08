@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP User Stylesheet Switcher
-Version: v1.6.0
+Version: v1.6.1
 Plugin URI: http://wordpress.org/plugins/wp-user-stylesheet-switcher/
 Author: Stéphane Groleau
 Author URI: http://web.globulesverts.org
@@ -79,7 +79,7 @@ class WPUserStylesheetSwitcher {
 		}
 		else if ($rotation != "none") {
 			//echo "<br>Type : ".$rotation."  style choice=".$stylesheet_choice." nb choices :".$nb_choices;
-			switch ($isset($settings['rotation'])) {
+			switch (isset($settings['rotation'])) {
 				case "weekday" : 
 					$stylesheet_choice = $stylesheet_choice + date( 'w', current_time( 'timestamp' ) );
 					if ($stylesheet_choice >= $nb_choices)
@@ -549,7 +549,7 @@ class WPUserStylesheetSwitcher {
 		}
     
 		if (!defined('WP_USER_STYLESHEET_SWITCHER_VERSION'))
-			define('WP_USER_STYLESHEET_SWITCHER_VERSION', '1.6.0');
+			define('WP_USER_STYLESHEET_SWITCHER_VERSION', '1.6.1');
 	
 		add_action('init', array($this, 'load_plugin_textdomain'));
 		$text = __('I will not be translated!', 'wp-user-stylesheet-switcher');

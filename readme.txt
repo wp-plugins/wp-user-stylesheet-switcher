@@ -4,11 +4,11 @@ Donate link: http://web.globulesverts.org
 Tags: stylesheet, customize, CSS, accessibility, multisite
 Requires at least: 3.0
 Tested up to: 4.0
-Stable tag: v1.6.0
+Stable tag: v1.6.1
 License: GPLv2 or later
 
 
-Adds a list of stylesheets in the frontesnd to allow visitors to choose a different visual look for the website.
+Adds a list of stylesheets in the frontend to allow visitors to choose a different visual look for the website.
 
 
 == Description ==
@@ -125,6 +125,9 @@ Then my other files only need to override the original styles.
 
 
 == Changelog ==
+= 1.6.1 =
+* Fix blank page on automatic rotation.
+
 = 1.6.0 =
 * Fix session start condition
 * Option to have automatic theme rotation
