@@ -3,8 +3,8 @@ Contributors: vgstef
 Donate link: http://web.globulesverts.org
 Tags: stylesheet, customize, CSS, accessibility, multisite
 Requires at least: 3.6
-Tested up to: 4.2
-Stable tag: v2.0.0
+Tested up to: 4.2.2
+Stable tag: v2.0.1
 License: GPLv2 or later
 
 
@@ -127,6 +127,9 @@ Then my other files only need to override the original styles.
 
 
 == Changelog ==
+= 2.0.1 =
+* Fix missing .js files
+
 = 2.0.0 =
 * Multiple different switchers
 * No more page reload (using javascription instead of forms)
