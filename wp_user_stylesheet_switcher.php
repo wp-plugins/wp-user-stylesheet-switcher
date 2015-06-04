@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP User Stylesheet Switcher
-Version: v2.0.1
+Version: v2.0.2
 Plugin URI: http://wordpress.org/plugins/wp-user-stylesheet-switcher/
 Author: Stéphane Groleau
 Author URI: http://web.globulesverts.org
@@ -135,7 +135,7 @@ class WPUserStylesheetSwitcher {
 	{
 		$settings = $this->get_wp_user_stylesheet_settings();
 		
-		$sessionData = [];
+		$sessionData = array();
 		
 		if (isset($_COOKIE["wp_user_stylesheet_switcher_js"])) {
 			$sessionData = json_decode($_COOKIE["wp_user_stylesheet_switcher_js"], true);
@@ -716,13 +716,9 @@ class WPUserStylesheetSwitcher {
 	}
 
 	public function __construct() {
-	
-		if (!session_id()) {
-			session_start();
-		}
-    
+	    
 		if (!defined('WP_USER_STYLESHEET_SWITCHER_VERSION'))
-			define('WP_USER_STYLESHEET_SWITCHER_VERSION', '2.0.1');
+			define('WP_USER_STYLESHEET_SWITCHER_VERSION', '2.0.2');
 	
 		add_action('init', array($this, 'load_plugin_textdomain'));
 		$text = __('I will not be translated!', 'wp-user-stylesheet-switcher');
@@ -740,9 +736,6 @@ class WPUserStylesheetSwitcher {
 
 		add_shortcode('wp_user_stylesheet_switcher', array( $this, 'create_wp_user_stylesheet_switcher'));
 
-		// set a cookie to keep the user choiche
-		//~ add_action( 'init', 'set_wp_user_stylesheet_switcher_cookie');
-		
 		// add_action('wp_head', array( $this, 'wp_user_stylesheet_switcher_addcss'));
 		add_action('wp_enqueue_scripts', array( $this, 'wp_user_stylesheet_switcher_addcss'), 999);
 
@@ -751,7 +744,6 @@ class WPUserStylesheetSwitcher {
 		register_activation_hook(__FILE__, array( $this, 'wp_user_stylesheet_switcher_plugin_install'));
 	}
 }
-
 
 $wpUserStylesheetSwitcher = new WPUserStylesheetSwitcher();
 
