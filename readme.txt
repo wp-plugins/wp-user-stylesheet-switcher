@@ -2,13 +2,13 @@
 Contributors: vgstef
 Donate link: http://web.globulesverts.org
 Tags: stylesheet, customize, CSS, accessibility, multisite
-Requires at least: 3.0
-Tested up to: 4.0
-Stable tag: v1.6.1
+Requires at least: 3.6
+Tested up to: 4.2.2
+Stable tag: v2.0.2
 License: GPLv2 or later
 
 
-Adds a list of stylesheets in the frontend to allow visitors to choose a different visual look for the website.
+Adds a list (or multiple list) of stylesheets in the frontend to allow visitors to choose a different visual look for the website.
 
 
 == Description ==
@@ -21,9 +21,10 @@ On the frontend, when a choice is made in the dropdown list, the webpage is relo
 
 = Plugin Features =
 * Easy installation/setup
-* Any number of stylesheet options
+* Any number of switchers
+* Each switcher can have any number of stylesheet options
 * Set a default stylesheet
-* Multiple instances of stylesheet lists can be present on the same page.
+* Multiple instances of switchers/stylesheet lists can be present on the same page.
 * Choice between a dropdown or icon list for each list
 * Can be used with a shortcode in a post/page, with the widget and with a php function in the theme
 * For each list, possibility to show/hide the title
@@ -46,17 +47,18 @@ To see an example, visit [plugin page](http://web.globulesverts.org/wp-user-styl
 6. If using icons, customize the look of the list in the CSS files.
 
 = Options for the shortcode  =
+* switcher_id : Reference of the switcher to display (shown in the switcher admin page)
 * list_title : Used to set a title to the list of stylesheets
 * list_type : Select between "dropdown" "icon" or "button". The dropdown list is set by default. "Button" will show only only button to rotate between available stylesheets.
 * show_list_title : Set to "false" if you don't want any list title. "true" by default.
 
-Example : `[wp_user_stylesheet_switcher list_title="Available styles" list_type="icon" show_list_title="false"]`
+Example : `[wp_user_stylesheet_switcher switcher_id="s0" list_title="Available styles" list_type="icon" show_list_title="false"]`
 
-If using the php function show_wp_user_stylesheet_switcher(), you can customize the list using an array of variables (similar to the shortcode) : `array('list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'icon')`
+If using the php function show_wp_user_stylesheet_switcher(), you can customize the list using an array of variables (similar to the shortcode) : `array('switcher_id'=>'s0', 'list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'icon')`
 
 By default `<?php show_wp_user_stylesheet_switcher(); ?>` will show a dropdown list with the default list title. But you can also pass an array like this :
 `<?php global $wpUserStylesheetSwitcher;
-$wpUserStylesheetSwitcher->show_wp_user_stylesheet_switcher(array('list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'dropdown'));?>`
+$wpUserStylesheetSwitcher->show_wp_user_stylesheet_switcher(array('switcher_id'=>'s0', 'list_title'=>'Available styles', 'show_list_title'=>'true', 'list_type'=>'dropdown'));?>`
 
 To customize the icon list, place the icons in your the theme folder (where the CSS are).
 You can give a different look for the icon list for each CSS files.
@@ -125,6 +127,17 @@ Then my other files only need to override the original styles.
 
 
 == Changelog ==
+= 2.0.2 =
+* Fix array initialization problem ("array()" instead of "[]") for older php versions (< 5.4)
+
+= 2.0.1 =
+* Fix missing .js files
+
+= 2.0.0 =
+* Multiple different switchers
+* No more page reload (using javascription instead of forms)
+* Preserver user choice using a cookie
+
 = 1.6.1 =
 * Fix blank page on automatic rotation.
 
