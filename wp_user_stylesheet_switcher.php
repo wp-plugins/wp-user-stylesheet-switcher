@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP User Stylesheet Switcher
-Version: v2.0.2
+Version: v2.0.3
 Plugin URI: http://wordpress.org/plugins/wp-user-stylesheet-switcher/
 Author: Stéphane Groleau
 Author URI: http://web.globulesverts.org
@@ -136,16 +136,23 @@ class WPUserStylesheetSwitcher {
 		$settings = $this->get_wp_user_stylesheet_settings();
 		
 		$sessionData = array();
-		
+		$removeStyle = false;
 		if (isset($_COOKIE["wp_user_stylesheet_switcher_js"])) {
-			$sessionData = json_decode($_COOKIE["wp_user_stylesheet_switcher_js"], true);
+			$sessionData = json_decode(stripslashes($_COOKIE["wp_user_stylesheet_switcher_js"]), true);		
+		} else {
+			wp_enqueue_script(
+					'wp-user_stylesheet_switcher_use_cookie_when_ready', 
+					plugins_url().'/wp-user-stylesheet-switcher/js/use_cookie_when_ready.js',
+					array('jquery')
+				);
 		}
-		
 		foreach ($settings['switchers'] as $switcherId => $switcherData) {
-			if (isset ($sessionData[$switcherId]))
+			if (isset ($sessionData[$switcherId])) {
 				$stylesheet_choice = intval($sessionData[$switcherId]);
-			else
+			}
+			else {
 				$stylesheet_choice = intval($switcherData['default']);
+			}
 		
 			if (isset($switcherData['rotation'])) {
 				if ($switcherData['rotation'] != 'none') {
@@ -207,8 +214,18 @@ class WPUserStylesheetSwitcher {
 		
 			$fileCSS = $switcherData['options'][$stylesheet_choice]['file'];
 			wp_register_style( 'wp_user_stylesheet_switcher_file'.$switcherId, $this->get_path($switcherId, $fileCSS) );
-			wp_enqueue_style( 'wp_user_stylesheet_switcher_file'.$switcherId);	
+			wp_enqueue_style( 'wp_user_stylesheet_switcher_file'.$switcherId);
+			if (isset($switcherData['remove']))
+				if ($switcherData['remove'] == $stylesheet_choice)
+					$removeStyle = true;
 		}
+		if ($removeStyle)
+			wp_enqueue_script(
+				'wp_user_stylesheet_switcher_disable_styles.js', 
+				plugins_url().'/wp-user-stylesheet-switcher/js/disable_styles.js',
+				array('jquery')
+			);
+
 	}
 
 	/*
@@ -270,6 +287,11 @@ class WPUserStylesheetSwitcher {
 				);
 			}
 		}
+		if (isset($_COOKIE["wp_user_stylesheet_switcher_js"])) {
+			$sessionData = json_decode(stripslashes($_COOKIE["wp_user_stylesheet_switcher_js"]), true);
+			if (isset($sessionData[$switcherId]))
+				$stylesheet_choice = $sessionData[$switcherId];
+		} 
 		
 		// get optional attributes and assign default values if not present
 		extract( shortcode_atts( array(
@@ -293,7 +315,7 @@ class WPUserStylesheetSwitcher {
 			$noOption=0;
 			foreach ($settings['switchers'][$switcherId]['options'] as $option) {	
 				if (($option['file'] != '') && ($option['name'] != '') && ($option['icon'] != '')) {
-					$output .= '<button class="wp_user_stylesheet_switcher_button wp_user_stylesheet_switcher_icon_'.$switcherId.'_'.$noOption.'" onclick="wp_user_stylesheet_switcher_changeCSS(\''.$switcherId.'\', \''.$noOption.'\');"><img class="wp_user_stylesheet_switcher_icon" src="'.$this->get_path($switcherId, $option['icon']).'"  alt="'.$option['name'].'"></button>';
+					$output .= '<button class="wp_user_stylesheet_switcher_button wp_user_stylesheet_switcher_icon_'.$switcherId.'_'.$noOption.' '.($stylesheet_choice==$noOption? "wp_user_stylesheet_switcher_active_option" :"").'" onclick="wp_user_stylesheet_switcher_changeCSS(\''.$switcherId.'\', \''.$noOption.'\');"><img class="wp_user_stylesheet_switcher_icon" src="'.$this->get_path($switcherId, $option['icon']).'"  alt="'.$option['name'].'"></button>';
 					$noOption++;
 				}
 			}
@@ -718,7 +740,7 @@ class WPUserStylesheetSwitcher {
 	public function __construct() {
 	    
 		if (!defined('WP_USER_STYLESHEET_SWITCHER_VERSION'))
-			define('WP_USER_STYLESHEET_SWITCHER_VERSION', '2.0.2');
+			define('WP_USER_STYLESHEET_SWITCHER_VERSION', '2.0.3');
 	
 		add_action('init', array($this, 'load_plugin_textdomain'));
 		$text = __('I will not be translated!', 'wp-user-stylesheet-switcher');
