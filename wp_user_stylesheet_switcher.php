@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP User Stylesheet Switcher
-Version: v1.6.1
+Version: v2.0.3
 Plugin URI: http://wordpress.org/plugins/wp-user-stylesheet-switcher/
 Author: Stéphane Groleau
 Author URI: http://web.globulesverts.org
@@ -45,11 +45,11 @@ class WPUserStylesheetSwitcher {
 	 * Adjust the path following the admin option
 	 * 
 	 * */
-	function get_path($fileName)
+	function get_path($switcherId, $fileName)
 	{
-		$settings = get_option('wp_user_stylesheet_switcher_settings');
-		if (isset($settings['path'])) {
-			if ($settings['path'] == "relative")
+		$settings = $this->get_wp_user_stylesheet_settings();
+		if (isset($settings['switchers'][$switcherId]['path'])) {
+			if ($settings['switchers'][$switcherId]['path'] == "relative")
 				$fileName = get_stylesheet_directory_uri().'/'.$fileName;
 		} else
 			$fileName = get_stylesheet_directory_uri().'/'.$fileName;
@@ -57,102 +57,175 @@ class WPUserStylesheetSwitcher {
 	}	
 
 	/*
+	 * Get settings and check version. Update settings if necessary.
+	 * 
+	 * */
+	function get_wp_user_stylesheet_settings()
+	{
+		$settings = get_option('wp_user_stylesheet_switcher_settings');
+		
+		if (!isset($settings['version']))
+			$settings['version'] = 0;
+		
+		if (!isset($settings['switchers']) || (version_compare($settings['version'], "2.0.0") < 0)) {
+			// For version prior to 2.0.0
+			//echo "<h3><em>".__("--> Plugin updated", "wp-user-stylesheet-switcher")."</em></h3>";
+			
+			if (isset ($_SESSION['user_stylesheet_switcher']))
+				unset ($_SESSION['user_stylesheet_switcher']);
+			
+			$newSettings['switchers']['s0']['title'] = $settings['title'];
+			foreach ($settings['options'] as $key => $option) {
+				if (!isset($option['icon'])) {
+					$NewOption = array(
+						'name' => $option['name'],
+						'file' => $option['file'],
+						'icon' => ''
+					);
+					$newSettings['switchers']['s0']['options'][$key] = $NewOption;
+				} else
+					$newSettings['switchers']['s0']['options'][$key] = $option;
+			}
+			
+			if (!isset($settings['path']))
+				$newSettings['switchers']['s0']['path'] = 'relative';
+			else
+				$newSettings['switchers']['s0']['path'] = $settings['path'];
+				
+			if (!isset($settings['remove']))
+				$newSettings['switchers']['s0']['remove'] = "-1";
+			else
+				$newSettings['switchers']['s0']['remove'] = $settings['remove'];
+			
+			if (!isset($settings['reset']))
+				$newSettings['switchers']['s0']['reset'] = "-1";
+			else
+				$newSettings['switchers']['s0']['reset'] = $settings['reset'];
+			
+			if (!isset($settings['button_icon_file']))
+				$newSettings['switchers']['s0']['button_icon_file'] = "";
+			else
+				$newSettings['switchers']['s0']['button_icon_file'] = $settings['button_icon_file'];
+			
+			if (!isset($settings['rotation']))
+				$newSettings['switchers']['s0']['rotation'] = 'none';
+			else
+				$newSettings['switchers']['s0']['rotation'] = $settings['rotation'];
+				
+			if (isset($settings['wp_user_stylesheet_switcher_default']))
+				$newSettings['switchers']['s0']['default'] = $settings["wp_user_stylesheet_switcher_default"];
+			else
+				$newSettings['switchers']['s0']['default'] = 0;
+				
+			$newSettings['switcherLastKey'] = 0;
+			
+			$newSettings['version'] = WP_USER_STYLESHEET_SWITCHER_VERSION;
+			$settings = $newSettings;
+			update_option('wp_user_stylesheet_switcher_settings', $settings);
+		}
+		
+		return $settings;
+	}
+
+	/*
 	 * Adds the selected stylesheet file to the header
 	 * 
 	 * */
 	public function wp_user_stylesheet_switcher_addcss()
 	{
-		$settings = get_option('wp_user_stylesheet_switcher_settings');
-		$nb_choices = $this->count_options($settings['options']);
+		$settings = $this->get_wp_user_stylesheet_settings();
 		
-		$rotation = isset($settings['rotation']) ? $settings['rotation'] : "none";
-		
-		$stylesheet_choice = $settings['default'];
-		if (isset($_POST['user_stylesheet_switcher_choice']))
-		{
-			// User chose a stylesheet in the switcher
-			$stylesheet_choice = $_POST['user_stylesheet_switcher_choice'];
-			$_SESSION['user_stylesheet_switcher'] = $stylesheet_choice;
-		} else if (isset($_SESSION['user_stylesheet_switcher'])) {
-			// User already chose a stylesheet during this session
-			$stylesheet_choice = $_SESSION['user_stylesheet_switcher'];
+		$sessionData = array();
+		$removeStyle = false;
+		if (isset($_COOKIE["wp_user_stylesheet_switcher_js"])) {
+			$sessionData = json_decode(stripslashes($_COOKIE["wp_user_stylesheet_switcher_js"]), true);		
+		} else {
+			wp_enqueue_script(
+					'wp-user_stylesheet_switcher_use_cookie_when_ready', 
+					plugins_url().'/wp-user-stylesheet-switcher/js/use_cookie_when_ready.js',
+					array('jquery')
+				);
 		}
-		else if ($rotation != "none") {
-			//echo "<br>Type : ".$rotation."  style choice=".$stylesheet_choice." nb choices :".$nb_choices;
-			switch (isset($settings['rotation'])) {
-				case "weekday" : 
-					$stylesheet_choice = $stylesheet_choice + date( 'w', current_time( 'timestamp' ) );
-					if ($stylesheet_choice >= $nb_choices)
-						$stylesheet_choice %= $nb_choices;
-					$_SESSION['user_stylesheet_switcher'] = $stylesheet_choice;
-					break;
-				case "week" :
-					$diff_week = abs(date( 'W', current_time( 'timestamp' ) ) - date( 'W', $settings['save_date'] ));
-					$stylesheet_choice = $stylesheet_choice + $diff_week;
-					if ($stylesheet_choice >= $nb_choices)
-						$stylesheet_choice %= $nb_choices;
-					$_SESSION['user_stylesheet_switcher'] = $stylesheet_choice;
-					break;
-				case "month" : 
-					$diff_month = abs(date( 'm', current_time( 'timestamp' ) ) - date( 'm', $settings['save_date'] ));
-					$stylesheet_choice = $stylesheet_choice + $diff_month;
-					if ($stylesheet_choice >= $nb_choices)
-						$stylesheet_choice %= $nb_choices;
-					$_SESSION['user_stylesheet_switcher'] = $stylesheet_choice;
-					break;
-				case "season" : 
-					// What is today's date - number
-					$current_day = date( 'z', current_time( 'timestamp' ) );
-
-					//  Days of spring
-					$spring = date("z", strtotime("March 21"));
-					$summer = date("z", strtotime("June 21"));
-					$autumn = date("z", strtotime("September 23"));
-					$winter = date("z", strtotime("December 21"));
-
-					if( $current_day >= $spring && $current_day <= $summer ) :
-					   $season = 0; // "spring"
-					elseif( $current_day >= $summer && $current_day < $autumn ) :
-					   $season = 1; // "summer"
-					elseif( $current_day >= $autumn && $current_day < $winter ) :
-					   $season = 2; // "autumn"
-					else :
-					   $season = 3; // "winter"
-					endif;
-					
-					$stylesheet_choice = $stylesheet_choice + $season;
-					if ($stylesheet_choice >= $nb_choices)
-						$stylesheet_choice %= $nb_choices;
-					$_SESSION['user_stylesheet_switcher'] = $stylesheet_choice;
-					
-					break;
-				case "year" : 
-					$diff_year = abs(date( 'Y', current_time( 'timestamp' ) ) - date( 'Y', $settings['save_date'] ));
-					$stylesheet_choice = $stylesheet_choice + $diff_year;
-					if ($stylesheet_choice >= $nb_choices)
-						$stylesheet_choice %= $nb_choices;
-					$_SESSION['user_stylesheet_switcher'] = $stylesheet_choice;
-					break;
-				case "random" : 
-					$stylesheet_choice = rand(0, $nb_choices-1);
-					$_SESSION['user_stylesheet_switcher'] = $stylesheet_choice;
-					break;
+		foreach ($settings['switchers'] as $switcherId => $switcherData) {
+			if (isset ($sessionData[$switcherId])) {
+				$stylesheet_choice = intval($sessionData[$switcherId]);
 			}
-		} else
-			{
-				// user never chose a stylesheet, so use the default one or the auto
-				$_SESSION['user_stylesheet_switcher'] = $stylesheet_choice;					
+			else {
+				$stylesheet_choice = intval($switcherData['default']);
 			}
-			
-		if ((!is_numeric($stylesheet_choice)) || ($stylesheet_choice < 0) || ($stylesheet_choice >= $nb_choices)) {
-			$stylesheet_choice = $settings['default'];
-			$_SESSION['user_stylesheet_switcher'] = $stylesheet_choice;
+		
+			if (isset($switcherData['rotation'])) {
+				if ($switcherData['rotation'] != 'none') {
+					$nb_choices = $this->count_options($switcherData['options']);	
+					switch ($switcherData['rotation']) {
+						case "weekday" : 
+							$stylesheet_choice = $stylesheet_choice + date( 'w', current_time( 'timestamp' ) );
+							if ($stylesheet_choice >= $nb_choices)
+								$stylesheet_choice %= $nb_choices;
+							break;
+						case "week" :
+							$diff_week = abs(date( 'W', current_time( 'timestamp' ) ) - date( 'W', $switcherData['save_date'] ));
+							$stylesheet_choice = $stylesheet_choice + $diff_week;
+							if ($stylesheet_choice >= $nb_choices)
+								$stylesheet_choice %= $nb_choices;
+							break;
+						case "month" : 
+							$diff_month = abs(date( 'm', current_time( 'timestamp' ) ) - date( 'm', $switcherData['save_date'] ));
+							$stylesheet_choice = $stylesheet_choice + $diff_month;
+							if ($stylesheet_choice >= $nb_choices)
+								$stylesheet_choice %= $nb_choices;
+							break;
+						case "season" : 
+							// What is today's date - number
+							$current_day = date( 'z', current_time( 'timestamp' ) );
+
+							//  Days of spring
+							$spring = date("z", strtotime("March 21"));
+							$summer = date("z", strtotime("June 21"));
+							$autumn = date("z", strtotime("September 23"));
+							$winter = date("z", strtotime("December 21"));
+
+							if( $current_day >= $spring && $current_day <= $summer ) :
+							   $season = 0; // "spring"
+							elseif( $current_day >= $summer && $current_day < $autumn ) :
+							   $season = 1; // "summer"
+							elseif( $current_day >= $autumn && $current_day < $winter ) :
+							   $season = 2; // "autumn"
+							else :
+							   $season = 3; // "winter"
+							endif;
+							
+							$stylesheet_choice = $stylesheet_choice + $season;
+							if ($stylesheet_choice >= $nb_choices)
+								$stylesheet_choice %= $nb_choices;
+							break;
+						case "year" : 
+							$diff_year = abs(date( 'Y', current_time( 'timestamp' ) ) - date( 'Y', $switcherData['save_date'] ));
+							$stylesheet_choice = $stylesheet_choice + $diff_year;
+							if ($stylesheet_choice >= $nb_choices)
+								$stylesheet_choice %= $nb_choices;
+							break;
+						case "random" : 
+							$stylesheet_choice = rand(0, $nb_choices-1);
+							break;
+					}
+				}	
+			}
+		
+			$fileCSS = $switcherData['options'][$stylesheet_choice]['file'];
+			wp_register_style( 'wp_user_stylesheet_switcher_file'.$switcherId, $this->get_path($switcherId, $fileCSS) );
+			wp_enqueue_style( 'wp_user_stylesheet_switcher_file'.$switcherId);
+			if (isset($switcherData['remove']))
+				if ($switcherData['remove'] == $stylesheet_choice)
+					$removeStyle = true;
 		}
-		
-		$fileCSS = $settings['options'][$stylesheet_choice]['file'];
-		
-		wp_register_style( 'wp_user_stylesheet_switcher_file'.$stylesheet_choice, $this->get_path($fileCSS) );
-		wp_enqueue_style( 'wp_user_stylesheet_switcher_file'.$stylesheet_choice);
+		if ($removeStyle)
+			wp_enqueue_script(
+				'wp_user_stylesheet_switcher_disable_styles.js', 
+				plugins_url().'/wp-user-stylesheet-switcher/js/disable_styles.js',
+				array('jquery')
+			);
+
 	}
 
 	/*
@@ -167,176 +240,253 @@ class WPUserStylesheetSwitcher {
 		else
 			$wp_user_stylesheet_switcher_nbform = 1;
 
-		$settings = get_option('wp_user_stylesheet_switcher_settings');
+		$settings = $this->get_wp_user_stylesheet_settings();
 
-		if (!isset($_SESSION['user_stylesheet_switcher']))
-			$_SESSION['user_stylesheet_switcher'] = $settings['default'];  // Default choice
-		$stylesheet_choice = $_SESSION['user_stylesheet_switcher'];
+		if ($wp_user_stylesheet_switcher_nbform == 1) {
+			wp_enqueue_script('wp_user_stylesheet_switcher_script', plugins_url().'/wp-user-stylesheet-switcher/js/wp_user_stylesheet_switcher.js', array('jquery'));
+			wp_enqueue_script('wp_user_stylesheet_switcher_script_cookies', plugins_url().'/wp-user-stylesheet-switcher/js/js.cookie.js');
+			
+			$stylesheets = array();
+			
+			foreach ($settings['switchers'] as $switcherId => $switcherData) {
+				$noOption = 0;
+				$stylesheets[$switcherId]['default'] = $switcherData['default'];
+				foreach ($switcherData['options'] as $option) {	
+					$switcherFile = $this->get_path($switcherId, $option['file']);
+					if ($noOption == $switcherData['remove'])
+						$switcherFile = "Remove";
+					else if ($noOption == $switcherData['reset'])
+						$switcherFile = "Reset";
+						
+					if (($option['file'] != '') && (($option['name'] != ''))) {
+						$stylesheets[$switcherId][$noOption]['file'] = $switcherFile;
+						$noOption++;
+					}
+				}
+			}
+			
+			wp_localize_script('wp_user_stylesheet_switcher_script', 'wp_user_stylesheets', $stylesheets);
+		}
 		
-		if (isset($settings['remove'])) {
-			if ($stylesheet_choice == $settings['remove']) {
+		$switcherId = 0;
+		if (isset($settings['switchers'])) {
+			$subArray = array_keys($settings['switchers']);
+			$switcherId = reset($subArray);
+		}
+		if (isset($attributes['switcher_id']))
+			$switcherId = $attributes['switcher_id'];
+
+		$stylesheet_choice = $settings['switchers'][$switcherId]['default'];
+		
+		if (isset($settings['switchers'][$switcherId]['remove'])) {
+			if ($stylesheet_choice == $settings['switchers'][$switcherId]['remove']) {
 				wp_enqueue_script(
 					'remove_styles.js', 
 					plugins_url().'/wp-user-stylesheet-switcher/js/remove_styles.js',
 					array('jquery')
 				);
-				}
 			}
+		}
+		if (isset($_COOKIE["wp_user_stylesheet_switcher_js"])) {
+			$sessionData = json_decode(stripslashes($_COOKIE["wp_user_stylesheet_switcher_js"]), true);
+			if (isset($sessionData[$switcherId]))
+				$stylesheet_choice = $sessionData[$switcherId];
+		} 
 		
 		// get optional attributes and assign default values if not present
 		extract( shortcode_atts( array(
-			'list_title' => $settings['title'],
+			'switcher_id' => $switcherId,
+			'list_title' => $settings['switchers'][$switcherId]['title'],
 			'show_list_title' => "true",
 			'list_type' => 'dropdown',
 		), $attributes ) );
 
 		if (!isset($attributes['list_title']))
-			$attributes['list_title'] = $settings['title'];
+			$attributes['list_title'] = $settings['switchers'][$switcherId]['title'];
 		
 		if (!isset($attributes['show_list_title']))
 			$attributes['show_list_title'] = "true";
 		
 		if ("icon" == $list_type) {		
-			$output = '<span class="wp_user_stylesheet_switcher"><form method="post" action="'.str_replace( '%7E', '~', $_SERVER['REQUEST_URI']).'" id="wp_user_stylesheet_switcher_form'.$wp_user_stylesheet_switcher_nbform.'" name="wp_user_stylesheet_switcher_form'.$wp_user_stylesheet_switcher_nbform.'" style="display: inline">';
+			$output = '<span class="wp_user_stylesheet_switcher">';
 			
 			if (("true" == $attributes['show_list_title']) || ("on" == $attributes['show_list_title'])) $output .= $attributes['list_title'];
 		
 			$noOption=0;
-			foreach ($settings['options'] as $option) {	
-				if (($option['file'] != '') && ($option['name'] != '') && ($option['icon'] != ''))
-					$output .= '<button class="'.($stylesheet_choice==$noOption?'wp_user_stylesheet_switcher_active_option':'').' wp_user_stylesheet_switcher_button" id="wp_user_stylesheet_switcher_button'.$noOption.'" type="submit" name="user_stylesheet_switcher_choice" value="'.$noOption.'" title="'.$option['name'].'"><img class="wp_user_stylesheet_switcher_icon" src="'.$this->get_path($option['icon']).'"  alt="'.$option['name'].'"></button>';
-				$noOption++;
+			foreach ($settings['switchers'][$switcherId]['options'] as $option) {	
+				if (($option['file'] != '') && ($option['name'] != '') && ($option['icon'] != '')) {
+					$output .= '<button class="wp_user_stylesheet_switcher_button wp_user_stylesheet_switcher_icon_'.$switcherId.'_'.$noOption.' '.($stylesheet_choice==$noOption? "wp_user_stylesheet_switcher_active_option" :"").'" onclick="wp_user_stylesheet_switcher_changeCSS(\''.$switcherId.'\', \''.$noOption.'\');"><img class="wp_user_stylesheet_switcher_icon" src="'.$this->get_path($switcherId, $option['icon']).'"  alt="'.$option['name'].'"></button>';
+					$noOption++;
+				}
 			}
-			$output .= '<input type="hidden" name="wp_user_stylesheet_switcher_list_type" value="icon"></form></span>';
+			$output .= '</span>';
 
 		} else if ("button" == $list_type) {
-			$output = '<span class="wp_user_stylesheet_switcher"><form method="post" action="'.str_replace( '%7E', '~', $_SERVER['REQUEST_URI']).'" id="wp_user_stylesheet_switcher_form'.$wp_user_stylesheet_switcher_nbform.'" name="wp_user_stylesheet_switcher_form'.$wp_user_stylesheet_switcher_nbform.'" style="display: inline">';
+			$output = '<span class="wp_user_stylesheet_switcher">';
 			
 			if (("true" == $attributes['show_list_title']) || ("on" == $attributes['show_list_title'])) $output .= $attributes['list_title'];
 		
 			$newStyleSheet = $stylesheet_choice + 1;
-			if ($newStyleSheet >= $this->count_options($settings['options']))
+			if ($newStyleSheet >= $this->count_options($settings['switchers'][$switcherId]['options']))
 				$newStyleSheet = 0;
-				
-			$output .= '<button class="wp_user_stylesheet_switcher_button" id="wp_user_stylesheet_switcher_button'.$newStyleSheet.'" type="submit" name="user_stylesheet_switcher_choice" value="'.$newStyleSheet.'" title="'.$attributes['list_title'].'">';
 			
-			if ($settings['button_icon_file'] != "")
-				$output .= '<img class="wp_user_stylesheet_switcher_button_icon" src="'.$this->get_path($settings['button_icon_file']).'"  alt="'.$attributes['list_title'].'">';
+			$switcherOption = "";
+			if ($newStyleSheet == $settings['switchers'][$switcherId]['remove'])
+				$switcherOption = "Remove";
+			else if ($newStyleSheet == $settings['switchers'][$switcherId]['reset'])
+				$switcherOption = "Reset";
+			
+			$option = $settings['switchers'][$switcherId]['options'][$newStyleSheet];
+					
+			$output .= '<a href="#" class="wp_user_stylesheet_switcher_button_'.$switcherId.'" value="'.$newStyleSheet.'" title="'.$attributes['list_title'].'" onclick="wp_user_stylesheet_switcher_changeCSS(\''.$switcherId.'\', \'-1\');">';
+						
+			if ($settings['switchers'][$switcherId]['button_icon_file'] != "")
+				$output .= '<img class="wp_user_stylesheet_switcher_button_icon_'.$switcherId.'" src="'.$this->get_path($switcherId, $settings['switchers'][$switcherId]['button_icon_file']).'"  alt="'.$attributes['list_title'].'">';
 			else
 				$output .= $attributes['list_title'];
 			
-			$output .= '</button><input type="hidden" name="wp_user_stylesheet_switcher_list_type" value="button"></form></span>';	
+			$output .= '</a></span>';	
 		}
 		else
 		{
-			$output = '<div class="wp_user_stylesheet_switcher"><form method="post" action="'.str_replace( '%7E', '~', $_SERVER['REQUEST_URI']).'" id="wp_user_stylesheet_switcher_form'.$wp_user_stylesheet_switcher_nbform.'" name="wp_user_stylesheet_switcher_form'.$wp_user_stylesheet_switcher_nbform.'" style="display: inline">';
+			$output = '<div class="wp_user_stylesheet_switcher">';
 			
 			if (("true" == $attributes['show_list_title']) || ("on" == $attributes['show_list_title'])) $output .= $attributes['list_title'];
 		
-			$output .= '<select name="user_stylesheet_switcher_choice"  onchange="document.wp_user_stylesheet_switcher_form'.$wp_user_stylesheet_switcher_nbform.'.submit();">';
+			$output .= '<select name="user_stylesheet_switcher_choice_dropdown_'.$switcherId.'" onchange="wp_user_stylesheet_switcher_changeCSS(\''.$switcherId.'\', this.value);">';
 			
 			$noOption=0;
-			foreach ($settings['options'] as $option) {	
-				if (($option['file'] != '') && (($option['name'] != '')))
+			foreach ($settings['switchers'][$switcherId]['options'] as $option) {	
+				if (($option['file'] != '') && (($option['name'] != ''))) {
 					$output .= '<option '.($stylesheet_choice==$noOption?'selected="selected"':"").' value="'.$noOption.'">'.$option['name'].'</option>';
-				$noOption++;
+					$noOption++;
+				}
 			}
-			$output .= '</select><input type="hidden" name="wp_user_stylesheet_switcher_list_type" value="dropdown"></form></div>';
+			$output .= '</select></div>';
 		}
 			
 		return $output;
 	}
 
 	/*
-	 * Shows the dropdown list in the webpage
+	 * Shows the switcher on the webpage
 	 * Function used directly in php
 	 * 
 	 * */
-	public function show_wp_user_stylesheet_switcher($list_type = array('list_type'=>'dropdown'))
+	public function show_wp_user_stylesheet_switcher($attributes = array('list_type'=>'dropdown'))
 	{
-		echo $this->create_wp_user_stylesheet_switcher($list_type);
+		echo $this->create_wp_user_stylesheet_switcher($attributes);
 	}
 	
 	/*
-	 * Creates and display the option page in the setting menu
+	 * Creates and display the admin option page in the setting menu
 	 * Deals also with the submitted form to update the plugin options.
 	 * 
 	 * */
 	public function show_wp_user_stylesheet_switcher_options()
 	{
-		$settings = get_option('wp_user_stylesheet_switcher_settings');
-		if (!isset($settings['version']))
-			$settings['version'] = 0;
+		$settings = $this->get_wp_user_stylesheet_settings();
 		
-		if ($settings['version'] != WP_USER_STYLESHEET_SWITCHER_VERSION) {
-			// Upgrade plugin options
-			foreach ($settings['options'] as $key => $option) {
-				if (!isset($option['icon'])) {
-					$NewOption = array(
-						'name' => $option['name'],
-						'file' => $option['file'],
-						'icon' => ''
-					);
-					$settings['options'][$key] = $NewOption;
+		$activeSwitcherId = 's0';
+		
+		$addSwitcher = false;
+		if (isset($_POST['user_stylesheet_switcher_list'])) {
+			$subArray = array_keys($settings['switchers']);
+			if (in_array($_POST['user_stylesheet_switcher_list'], $subArray)) {
+				$activeSwitcherId = $_POST['user_stylesheet_switcher_list'];
+				// Delete the switcher
+				if (isset($_POST['delete_current_switcher'])) {
+					if (count($subArray) > 1) {
+						unset ($settings['switchers'][$activeSwitcherId]);
+						update_option('wp_user_stylesheet_switcher_settings', $settings);
+						$subArray = array_keys($settings['switchers']);
+						$activeSwitcherId = reset($subArray);
+					} else
+						echo __("Can't delete this switcher, you need at least one switcher!", "wp-user-stylesheet-switcher");	
+				} 
+			}
+			
+			// Add a new switcher
+			if ($_POST['user_stylesheet_switcher_list'] == "-1") {
+				$addSwitcher = true;
+				$settings['switcherLastKey']++;
+				$activeSwitcherId = "s".$settings['switcherLastKey'];
+			}
+		} else
+			if (isset($_POST['user_stylesheet_switcher_active_switcher_id']))
+				// User chose a switcher in the dropdown list
+				$activeSwitcherId = $_POST['user_stylesheet_switcher_active_switcher_id'];
+			else
+				if (isset ($settings['switchers'])) {
+					$subArray = array_keys($settings['switchers']);
+					$activeSwitcherId = reset($subArray);
+				}
+		
+		if (isset($settings['switchers'][$activeSwitcherId]['options']))
+			$nbStylesheets = count($settings['switchers'][$activeSwitcherId]['options']);
+		else
+			$nbStylesheets = 3;
+		
+		if ((isset($_POST['info_update'])) || (isset($_POST['add_stylesheet_option'])) || (isset($_POST['delete_last_stylesheet_option'])) || $addSwitcher)
+		{
+			if (!$addSwitcher) {
+				$nonce = $_REQUEST['_wpnonce'];
+				if ( !wp_verify_nonce($nonce, 'wp_user_stylesheet_switcher_update')){
+					wp_die('Error! Nonce Security Check Failed! Go back to settings menu and save the settings again.');
 				}
 			}
 			
-			$settings['version'] = WP_USER_STYLESHEET_SWITCHER_VERSION;
+			if (!isset($settings['switcherLastKey']))
+				$settings['switcherLastKey'] = count($settings['switchers']);
 			
-			if (!isset($settings['path']))
-				$settings['path'] = 'relative';
-				
-			if (!isset($settings['remove']))
-				$settings['remove'] = "-1";
-			
-			if (!isset($settings['button_icon_file']))
-				$settings['button_icon_file'] = "";
-			
-			if (!isset($settings['rotation']))
-				$settings['rotation'] = 'none';
-			
-			update_option('wp_user_stylesheet_switcher_settings', $settings);
-		}
-		$nbStylesheets = count($settings['options']);
-		
-		if ((isset($_POST['info_update'])) || (isset($_POST['add_stylesheet_option'])) || (isset($_POST['delete_last_stylesheet_option'])))
-		{
-			$nonce = $_REQUEST['_wpnonce'];
-			if ( !wp_verify_nonce($nonce, 'wp_user_stylesheet_switcher_update')){
-				wp_die('Error! Nonce Security Check Failed! Go back to settings menu and save the settings again.');
-			}
-
 			if (isset($_POST["wp_user_stylesheet_switcher_title"]))
-				$settings['title'] = $_POST["wp_user_stylesheet_switcher_title"];
+				$settings['switchers'][$activeSwitcherId]['title'] = $_POST["wp_user_stylesheet_switcher_title"];
 			else
-				$settings['title'] =  __("Stylesheet choice", "wp-user-stylesheet-switcher");
+				if ($addSwitcher)
+					$settings['switchers'][$activeSwitcherId]['title'] =  __("New switcher", "wp-user-stylesheet-switcher")." ".(count($settings['switchers'])+1);
+				else
+					$settings['switchers'][$activeSwitcherId]['title'] =  __("Stylesheet switcher", "wp-user-stylesheet-switcher");
 			
 			if (isset($_POST["wp_user_stylesheet_switcher_path"]))
-				$settings['path'] = $_POST["wp_user_stylesheet_switcher_path"];
+				$settings['switchers'][$activeSwitcherId]['path'] = $_POST["wp_user_stylesheet_switcher_path"];
 			else
-				$settings['path'] = "";
+				$settings['switchers'][$activeSwitcherId]['path'] = "";
 			
 			if (isset($_POST["wp_user_stylesheet_switcher_default"]))
-				$settings['default'] = $_POST["wp_user_stylesheet_switcher_default"];
+				$settings['switchers'][$activeSwitcherId]['default'] = $_POST["wp_user_stylesheet_switcher_default"];
 			else
-				$settings['default'] = "";
+				$settings['switchers'][$activeSwitcherId]['default'] = 0;
 			
-			$nbStylesheets = intval($_POST["wp_user_stylesheet_switcher_number"]);
+			if ($addSwitcher)
+				$nbStylesheets = 3;
+			else
+				$nbStylesheets = intval($_POST["wp_user_stylesheet_switcher_number"]);
 			
 			if (isset($_POST['delete_last_stylesheet_option']) && ($nbStylesheets > 1)) 
 			{
 				$nbStylesheets--;
-				unset($settings['options'][$nbStylesheets]);
+				unset($settings['switchers'][$activeSwitcherId]['options'][$nbStylesheets]);
 			}
 			
-			for ($i=0; $i<$nbStylesheets; $i++) {
-				$Option = array(
-					'name' => $_POST["wp_user_stylesheet_switcher_name".$i],
-					'file' => $_POST["wp_user_stylesheet_switcher_file".$i],
-					'icon' => $_POST["wp_user_stylesheet_switcher_icon".$i]
-				);
-				$settings['options'][$i] = $Option;
+			if ($addSwitcher) {
+				for ($i=0; $i<$nbStylesheets; $i++) {
+					$Option = array(
+						'name' => '',
+						'file' => '',
+						'icon' => ''
+					);
+					$settings['switchers'][$activeSwitcherId]['options'][$i] = $Option;
+				}
 			}
+			else
+				for ($i=0; $i<$nbStylesheets; $i++) {
+					$Option = array(
+						'name' => $_POST["wp_user_stylesheet_switcher_name".$i],
+						'file' => $_POST["wp_user_stylesheet_switcher_file".$i],
+						'icon' => $_POST["wp_user_stylesheet_switcher_icon".$i]
+					);
+					$settings['switchers'][$activeSwitcherId]['options'][$i] = $Option;
+				}
 			
 			if (isset($_POST['add_stylesheet_option']))
 			{
@@ -345,34 +495,65 @@ class WPUserStylesheetSwitcher {
 						'file' => '',
 						'icon' => ''
 					);
-				$settings['options'][$nbStylesheets] = $Option;
+				$settings['switchers'][$activeSwitcherId]['options'][$nbStylesheets] = $Option;
 				$nbStylesheets++;
 			}
 			
 			if (isset($_POST["wp_user_stylesheet_switcher_remove_stylesheets"]))
-				$settings['remove'] = $_POST["wp_user_stylesheet_switcher_remove_stylesheets"];
+				$settings['switchers'][$activeSwitcherId]['remove'] = $_POST["wp_user_stylesheet_switcher_remove_stylesheets"];
 			else
-				$settings['remove'] = "-1";
+				$settings['switchers'][$activeSwitcherId]['remove'] = "-1";
+			
+			if (isset($_POST['wp_user_stylesheet_switcher_revert_to_default']))
+				$settings['switchers'][$activeSwitcherId]['reset'] = $_POST['wp_user_stylesheet_switcher_revert_to_default'];
+			else
+				$settings['switchers'][$activeSwitcherId]['reset'] = "-1";
 			
 			if (isset($_POST["wp_user_stylesheet_switcher_button_icon_file"]))
-				$settings['button_icon_file'] = $_POST["wp_user_stylesheet_switcher_button_icon_file"];
+				$settings['switchers'][$activeSwitcherId]['button_icon_file'] = $_POST["wp_user_stylesheet_switcher_button_icon_file"];
 			else
-				$settings['button_icon_file'] = "";
+				$settings['switchers'][$activeSwitcherId]['button_icon_file'] = "";
 			
 			if (isset($_POST["wp_user_stylesheet_switcher_auto_rotation"]))
-				$settings['rotation'] = $_POST["wp_user_stylesheet_switcher_auto_rotation"];
+				$settings['switchers'][$activeSwitcherId]['rotation'] = $_POST["wp_user_stylesheet_switcher_auto_rotation"];
 			else
-				$settings['rotation'] = 'none';
+				$settings['switchers'][$activeSwitcherId]['rotation'] = 'none';
 			
-			$settings['save_date'] = current_time( 'timestamp' );
+			$settings['switchers'][$activeSwitcherId]['save_date'] = current_time( 'timestamp' );
 			
 			update_option('wp_user_stylesheet_switcher_settings', $settings);
 		}
 		
 		echo '<div class="wrap">'.screen_icon( ).'<h2>'.(__("WP User Stylesheet Switcher Options", "wp-user-stylesheet-switcher")).'</h2>';
+		echo (__("version ", "wp-user-stylesheet-switcher")).WP_USER_STYLESHEET_SWITCHER_VERSION;
 		
+		echo "<div><br>".sprintf(__('If you use or if you like this plugin, please consider <a href="%s">making a donation</a>. This helps me keep motivation to update and develop plugins. Thanks!', "wp-user-stylesheet-switcher"), "http://web.globulesverts.org/wp-user-stylesheet-switcher/")."</div>";
+		
+		/***********************************************
+		 * 
+		 *  Dropdown with available stylesheet switchers
+		 *  Retload the page with the selected switcher
+		 *
+		 */
+		echo '<p><form method="post" action="'.str_replace( '%7E', '~', $_SERVER['REQUEST_URI']).'" id="wp_user_stylesheet_admin_switcher_list_form" name="wp_user_stylesheet_admin_switcher_list_form" style="display: inline">';
+			
+		echo (__("Choose switcher", "wp-user-stylesheet-switcher")).'<select name="user_stylesheet_switcher_list"  onchange="document.wp_user_stylesheet_admin_switcher_list_form.submit();">';
+			
+		foreach ($settings['switchers'] as $switcherKey => $switcherData) {	
+			echo '<option '.($switcherKey==$activeSwitcherId?'selected="selected"':"").' value="'.$switcherKey.'">'.$switcherData['title'].'</option>';
+		}
+		echo '<option '.("-1"==$activeSwitcherId?'selected="selected"':"").' value="-1">'.(__("Add a new switcher", "wp-user-stylesheet-switcher")).'</option>';
+		echo '</select>';
+		echo ' <input type="submit" class="button-primary" name="delete_current_switcher" value="'.(__("Delete current switcher", "wp-user-stylesheet-switcher")).'" /><input type="hidden" name="current_switcher_id" value="'.$activeSwitcherId.'"><input type="hidden" name="wp_user_stylesheet_switcher_list_type" value="dropdownSwitcherList"></form></p><hr />';
+		
+		/***********************************************
+		 * 
+		 *  Options for the selected switcher
+		 *
+		 */
+		 
+		echo 'Switcher ID : '.$activeSwitcherId;
 		?>
-		
 		<form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>" >
 		<?php wp_nonce_field('wp_user_stylesheet_switcher_update'); ?>
 		<input type="hidden" name="info_update" id="info_update" value="true" />  
@@ -380,21 +561,21 @@ class WPUserStylesheetSwitcher {
 		echo '
 		<table class="form-table">
 		<tr valign="top">
-		<th scope="row">'.(__("Default label for the public list ", "wp-user-stylesheet-switcher")).'</th>
-		<td><input type="text" name="wp_user_stylesheet_switcher_title" value="'.$settings['title'].'" size="20" maxlength="40"/></td>
+		<th scope="row">'.(__("Default label for this switcher", "wp-user-stylesheet-switcher")).'</th>
+		<td><input type="text" name="wp_user_stylesheet_switcher_title" value="'.$settings['switchers'][$activeSwitcherId]['title'].'" size="20" maxlength="40"/></td>
 		</tr>
 		<tr valign="top">
 		<th scope="row">'.(__("Folder path for CSS and icons files", "wp-user-stylesheet-switcher")).'</th>
 		<td><select name="wp_user_stylesheet_switcher_path">
-			<option '.($settings['path']=='relative'?'selected="selected"':"").' value="relative">'.__('Relative to theme path').'</option>
-			<option '.($settings['path']=='absolute'?'selected="selected"':"").' value="absolute">'.__('Absolute path (not recommended)').'</option></select>
+			<option '.($settings['switchers'][$activeSwitcherId]['path']=='relative'?'selected="selected"':"").' value="relative">'.__('Relative to theme path').'</option>
+			<option '.($settings['switchers'][$activeSwitcherId]['path']=='absolute'?'selected="selected"':"").' value="absolute">'.__('Absolute path (not recommended)').'</option></select>
 			</td>
 		</tr>
 		</table>';
 		
 		echo '<table class="form-table">';
 		$no = 0;
-		foreach ($settings['options'] as $option) {
+		foreach ($settings['switchers'][$activeSwitcherId]['options'] as $option) {
 			$optionNumber = sprintf(__("Stylesheet option %d", "wp-user-stylesheet-switcher"), ($no+1));
 			echo '<tr valign="top"><th scope="row">'.$optionNumber.'</th><td><label for="wp_user_stylesheet_switcher_name'.$no.'">'.(__("Option name ", "wp-user-stylesheet-switcher")).' </label><input type="text" name="wp_user_stylesheet_switcher_name'.$no.'" value="'.$option['name'].'" size="20" maxlength="40"/></td>
 			<td><label for="wp_user_stylesheet_switcher_file'.$no.'">'.(__("CSS file name (including .CSS extension)", "wp-user-stylesheet-switcher")). ' </label><input type="text" name="wp_user_stylesheet_switcher_file'.$no.'" value="'.$option['file'].'" size="20" maxlength="250"/></td>
@@ -414,9 +595,9 @@ class WPUserStylesheetSwitcher {
 		<td><select name="wp_user_stylesheet_switcher_default">';
 		
 		$noOption=0;
-		foreach ($settings['options'] as $option) {	
+		foreach ($settings['switchers'][$activeSwitcherId]['options'] as $option) {	
 			if (($option['file'] != '') && (($option['name'] != '')))
-				echo '<option '.($settings['default']==$noOption?'selected="selected"':"").' value="'.$noOption.'">'.$option['name'].'</option>';
+				echo '<option '.($settings['switchers'][$activeSwitcherId]['default']==$noOption?'selected="selected"':"").' value="'.$noOption.'">'.$option['name'].'</option>';
 			$noOption++;
 		}
 		echo '</select><em> '.(__("To update the content of this dropdown list, update options first", "wp-user-stylesheet-switcher")).'</em></td>
@@ -426,13 +607,13 @@ class WPUserStylesheetSwitcher {
 		<th scope="row">'.(__("Automatic stylesheet rotation ", "wp-user-stylesheet-switcher")).'</th>
 		<td>'.__('Change stylesheet each ').'
 			<select name="wp_user_stylesheet_switcher_auto_rotation">
-				<option '.($settings['rotation']=='none'?'selected="selected"':"").' value="none">'.__('None').'</option>
-				<option '.($settings['rotation']=='weekday'?'selected="selected"':"").' value="weekday">'.__('Weekday').'</option>
-				<option '.($settings['rotation']=='week'?'selected="selected"':"").' value="week">'.__('Week').'</option>
-				<option '.($settings['rotation']=='month'?'selected="selected"':"").' value="month">'.__('Month').'</option>
-				<option '.($settings['rotation']=='season'?'selected="selected"':"").' value="season">'.__('Season').'</option>
-				<option '.($settings['rotation']=='year'?'selected="selected"':"").' value="year">'.__('Year').'</option>
-				<option '.($settings['rotation']=='random'?'selected="selected"':"").' value="random">'.__('Random').'</option>
+				<option '.($settings['switchers'][$activeSwitcherId]['rotation']=='none'?'selected="selected"':"").' value="none">'.__('None').'</option>
+				<option '.($settings['switchers'][$activeSwitcherId]['rotation']=='weekday'?'selected="selected"':"").' value="weekday">'.__('Weekday').'</option>
+				<option '.($settings['switchers'][$activeSwitcherId]['rotation']=='week'?'selected="selected"':"").' value="week">'.__('Week').'</option>
+				<option '.($settings['switchers'][$activeSwitcherId]['rotation']=='month'?'selected="selected"':"").' value="month">'.__('Month').'</option>
+				<option '.($settings['switchers'][$activeSwitcherId]['rotation']=='season'?'selected="selected"':"").' value="season">'.__('Season').'</option>
+				<option '.($settings['switchers'][$activeSwitcherId]['rotation']=='year'?'selected="selected"':"").' value="year">'.__('Year').'</option>
+				<option '.($settings['switchers'][$activeSwitcherId]['rotation']=='random'?'selected="selected"':"").' value="random">'.__('Random').'</option>
 			</select> <em> '.(__("The present stylesheet (ie. for the current month) is set with Default stylesheet.", "wp-user-stylesheet-switcher")).'</em>
 			</td>
 		</tr>';
@@ -442,21 +623,34 @@ class WPUserStylesheetSwitcher {
 		<td><select name="wp_user_stylesheet_switcher_remove_stylesheets">';
 		echo '<option value="-1"></option>';
 		$noOption=0;
-		foreach ($settings['options'] as $option) {	
+		foreach ($settings['switchers'][$activeSwitcherId]['options'] as $option) {	
 			if ($option['name'] != '')
-				echo '<option '.($settings['remove']==$noOption?'selected="selected"':"").' value="'.$noOption.'">'.$option['name'].'</option>';
+				echo '<option '.($settings['switchers'][$activeSwitcherId]['remove']==$noOption?'selected="selected"':"").' value="'.$noOption.'">'.$option['name'].'</option>';
 			$noOption++;
 		}
 		echo '</select><em> '.(__("Leave it blank if you don't want to offer the option to remove all stylesheet. Otherwise, choose the option associated with no stylesheet. To update the content of this dropdown list, update options first. ", "wp-user-stylesheet-switcher")).'</em></td>
 		</tr>';
 		
-		echo '<tr><th scope="row"><label for="wp_user_stylesheet_switcher_icon">'.(__("Optional icon file for single switcher button (.jpg, .gif or .png)", "wp-user-stylesheet-switcher")).'</label></th><td><input type="text" name="wp_user_stylesheet_switcher_button_icon_file" value="'.$settings['button_icon_file'].'" size="20" maxlength="250"/></td></tr>
+		echo '<tr valign="top">
+		<th scope="row">'.(__("Option to revert to defaults", "wp-user-stylesheet-switcher")).'</th>
+		<td><select name="wp_user_stylesheet_switcher_revert_to_default">';
+		echo '<option value="-1"></option>';
+		$noOption=0;
+		foreach ($settings['switchers'][$activeSwitcherId]['options'] as $option) {	
+			if ($option['name'] != '')
+				echo '<option '.($settings['switchers'][$activeSwitcherId]['reset']==$noOption?'selected="selected"':"").' value="'.$noOption.'">'.$option['name'].'</option>';
+			$noOption++;
+		}
+		echo '</select><em> '.(__("Leave it blank if you don't want to offer the option to revert to default settings. Otherwise, choose the option associated with it. To update the content of this dropdown list, update options first. ", "wp-user-stylesheet-switcher")).'</em></td>
+		</tr>';
+		
+		echo '<tr><th scope="row"><label for="wp_user_stylesheet_switcher_icon">'.(__("Optional icon file for single switcher button (.jpg, .gif or .png)", "wp-user-stylesheet-switcher")).'</label></th><td><input type="text" name="wp_user_stylesheet_switcher_button_icon_file" value="'.$settings['switchers'][$activeSwitcherId]['button_icon_file'].'" size="20" maxlength="250"/></td></tr>
 		</table>
+		<input type="hidden" name="user_stylesheet_switcher_active_switcher_id" value="'.$activeSwitcherId.'">
 		<div class="submit">
 			<input type="submit" class="button-primary" name="info_update" value="'.(__("Save options", "wp-user-stylesheet-switcher")).'" />
 		</div>						
 		</form>';
-		echo sprintf(__('If you use or if you like this plugin, please consider <a href="%s">making a donation</a>. This helps me keep motivation to update and develop plugins. Thanks!', "wp-user-stylesheet-switcher"), "http://web.globulesverts.org/wp-user-stylesheet-switcher/");
 	}
 
 	/*
@@ -475,11 +669,11 @@ class WPUserStylesheetSwitcher {
 	public function wp_user_stylesheet_switcher_plugin_install()
 	{
 		//General options
-		$settings['title'] = __("Stylesheet choice", "wp-user-stylesheet-switcher");
 		$settings['version'] = WP_USER_STYLESHEET_SWITCHER_VERSION;
-		$settings['path'] = 'relative';
-		$settings['default'] = "";
-		$settings['remove'] = "-1";
+		$settings['switchers']['s0']['title'] = __("Stylesheet choice", "wp-user-stylesheet-switcher");
+		$settings['switchers']['s0']['path'] = 'relative';
+		$settings['switchers']['s0']['default'] = "";
+		$settings['switchers']['s0']['remove'] = "-1";
 		
 		for ($i = 0; $i<5; $i++) {
 			$Option = array(
@@ -487,10 +681,11 @@ class WPUserStylesheetSwitcher {
 				'file' => '',
 				'icon' => ''
 			);
-			$settings['options'][$i] = $Option;
+			$settings['switchers']['s0']['options'][$i] = $Option;
 		}
-		$settings['button_icon_file'] = "";
-		$settings['rotation']='none';
+		$settings['switchers']['s0']['button_icon_file'] = "";
+		$settings['switchers']['s0']['rotation'] = 'none';
+		$settings['switcherLastKey'] = 0;
 		add_option('wp_user_stylesheet_switcher_settings', $settings);
 	}
 
@@ -541,15 +736,11 @@ class WPUserStylesheetSwitcher {
 		load_textdomain($domain, WP_LANG_DIR.'/wp-user-stylesheet-switcher/'.$domain.'-'.$locale.'.mo');
 		load_plugin_textdomain($domain, FALSE, dirname(plugin_basename(__FILE__)).'/languages/');
 	}
-    
+
 	public function __construct() {
-	
-		if (!session_id()) {
-			session_start();
-		}
-    
+	    
 		if (!defined('WP_USER_STYLESHEET_SWITCHER_VERSION'))
-			define('WP_USER_STYLESHEET_SWITCHER_VERSION', '1.6.1');
+			define('WP_USER_STYLESHEET_SWITCHER_VERSION', '2.0.3');
 	
 		add_action('init', array($this, 'load_plugin_textdomain'));
 		$text = __('I will not be translated!', 'wp-user-stylesheet-switcher');
@@ -567,7 +758,7 @@ class WPUserStylesheetSwitcher {
 
 		add_shortcode('wp_user_stylesheet_switcher', array( $this, 'create_wp_user_stylesheet_switcher'));
 
-		//add_action('wp_head', array( $this, 'wp_user_stylesheet_switcher_addcss'));
+		// add_action('wp_head', array( $this, 'wp_user_stylesheet_switcher_addcss'));
 		add_action('wp_enqueue_scripts', array( $this, 'wp_user_stylesheet_switcher_addcss'), 999);
 
 		add_action('load_textdomain', array( $this, 'load_custom_language_files_wp_user_stylesheet_switcher') , 10, 2);
@@ -575,7 +766,6 @@ class WPUserStylesheetSwitcher {
 		register_activation_hook(__FILE__, array( $this, 'wp_user_stylesheet_switcher_plugin_install'));
 	}
 }
-
 
 $wpUserStylesheetSwitcher = new WPUserStylesheetSwitcher();
 
@@ -590,10 +780,21 @@ class WP_User_Stylesheet_Switcher extends WP_Widget {
 	
 	function form($instance) {
 		// outputs the options form on admin
-				
-		  $defaults = array('title' => 'Stylesheets','show_title' => 'true', 'list_title' => __("Stylesheet choice", "wp-user-stylesheet-switcher"),'show_list_title' => 'true','list_type' => 'dropdown');
-		  $instance = wp_parse_args( (array) $instance, $defaults );
+		$settings = get_option('wp_user_stylesheet_switcher_settings');
+		
+		if (!isset($settings['switchers'])) {
+			echo "<p>";
+			echo __("Settings for Wp user style sheetswitcher out of date. Please review the options in the admin panel to configure the widget.", "wp-user-stylesheet-switcher");
+			echo "</p>";
+			return;
+		}
+		
+		$subArray = array_keys($settings['switchers']);
+		$firstSwitcher = reset($subArray);
 
+		$defaults = array('switcher_id' => $firstSwitcher, 'title' => 'Stylesheets','show_title' => 'true', 'list_title' => __("Stylesheet choice", "wp-user-stylesheet-switcher"),'show_list_title' => 'true','list_type' => 'dropdown');
+		
+		$instance = wp_parse_args( (array) $instance, $defaults );
 		  echo '<p><label for="'.$this->get_field_id('title').'">'.(__("Widget title", "wp-user-stylesheet-switcher")).' </label>
 		  <input type="text" id="'.$this->get_field_id('title').'" name="'.$this->get_field_name('title').'" value="'.$instance['title'].'" size="20" maxlength="40"/>
 		  </p>';
@@ -601,8 +802,18 @@ class WP_User_Stylesheet_Switcher extends WP_Widget {
 		  <p>
 		   <label for="<?php echo $this->get_field_id('show_title'); ?>"><?php _e('Show widget title', "wp-user-stylesheet-switcher");?></label>
 		   <input type="checkbox" id="<?php echo $this->get_field_id('show_title'); ?>" name="<?php echo $this->get_field_name('show_title'); ?>" <?php if ($instance['show_title']=="true") echo 'checked="checked"';
-		  echo '/></p>
-		  <p><label for="'.$this->get_field_id('list_title').'">'.(__("List title", "wp-user-stylesheet-switcher")).' </label>
+		  echo '/></p>';
+		  
+		  echo '<label for="'.$this->get_field_id('switcher_id').'">'._e('Select switcher', "wp-user-stylesheet-switcher").'</label><br />';
+		echo '<select id="'.$this->get_field_id('switcher_id').'" name="'.$this->get_field_name('switcher_id').'">';
+			$noSwitcher=0;
+			foreach ($settings['switchers'] as $switcherKey => $switcherData) {	
+				echo '<option '.($switcherKey==$instance['switcher_id']?'selected="selected"':"").' value="'.$switcherKey.'">'.$switcherData['title'].'</option>';
+				$noSwitcher++;
+			}
+			echo '</select>';
+		  
+		  echo '<p><label for="'.$this->get_field_id('list_title').'">'.(__("List title", "wp-user-stylesheet-switcher")).' </label>
 		  <input type="text" id="'.$this->get_field_id('list_title').'" name="'.$this->get_field_name('list_title').'" value="'.$instance['list_title'].'" size="20" maxlength="40"/>
 		  </p>';
 		  ?>
@@ -610,7 +821,7 @@ class WP_User_Stylesheet_Switcher extends WP_Widget {
 		   <label for="<?php echo $this->get_field_id('show_list_title'); ?>"><?php _e('Show list title', "wp-user-stylesheet-switcher");?></label>
 		   <input type="checkbox" id="<?php echo $this->get_field_id('show_list_title'); ?>" name="<?php echo $this->get_field_name('show_list_title'); ?>" <?php if ($instance['show_list_title']=="true") echo 'checked="checked"' ?> />
 		  </p>
-		  <label for="<?php echo $this->get_field_id('list_type') ?>"> <?php echo (__("List type", "wp-user-stylesheet-switcher")); ?> </label>
+		  <label for="<?php echo $this->get_field_id('list_type') ?>"> <?php echo (__("List type", "wp-user-stylesheet-switcher")); ?></label>
 		  <select id="<?php echo $this->get_field_id('list_type'); ?>" name="<?php echo $this->get_field_name('list_type') ?>">';
 		  
 			<option value="dropdown" <?php if ("dropdown"==$instance['list_type']) echo ' selected="selected"'; ?> ><?php _e("Dropdown list", "wp-user-stylesheet-switcher");?></option>
@@ -625,6 +836,7 @@ class WP_User_Stylesheet_Switcher extends WP_Widget {
 		// processes widget options to be saved
 		$instance = $old_instance;
 
+		$instance['switcher_id'] = $new_instance['switcher_id'];
 		$instance['title'] = $new_instance['title'];
 		$instance['show_title'] = $new_instance['show_title']=="on"?"true":"false";
 		$instance['list_title'] = $new_instance['list_title'];
@@ -634,9 +846,11 @@ class WP_User_Stylesheet_Switcher extends WP_Widget {
 		return $instance;
 	}
 	function widget($args, $instance) {
-		// outputs the content of the widget
+		// outputs the content of the widget for the user
 		extract( $args );
 		
+		if (isset($instance['switcher_id']))
+			$switcherId = $instance['switcher_id'];
 		$title = $instance['title'];
 		$list_type = $instance['list_type'];
 
