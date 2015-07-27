@@ -1,42 +1,43 @@
+# Copyright (C) 2014 
+# This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
 "Project-Id-Version: WP User Stylesheet Switcher\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-user-stylesheet-switcher\n"
 "POT-Creation-Date: 2015-07-24 01:22-0500\n"
-"PO-Revision-Date: 2015-07-24 01:34-0500\n"
-"Last-Translator: Stéphane Groleau <stefgroleau@gmail.com>\n"
-"Language-Team: Stéphane Groleau <stefgroleau@gmail.com>\n"
-"Language: fr_CA\n"
+"PO-Revision-Date: 2015-07-27 15:49+0100\n"
+"Last-Translator: Borisa Djuraskovic <borisad@webhostinghub.com>\n"
+"Language-Team: Globules Verts <web.globulesverts.org>\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e\n"
+"X-Generator: Poedit 1.7.4\n"
 "X-Poedit-Basepath: .\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: wp_user_stylesheet_switcher.php:421
 msgid "Can't delete this switcher, you need at least one switcher!"
 msgstr ""
-"Impossible de supprimer ce switcher, car vous devez avoir au moins un "
-"switcher!"
+"Ne možete izbrisati ovaj svičer (prekidač), potreban vam je bar jedan "
+"svičer! "
 
 #: wp_user_stylesheet_switcher.php:462
 msgid "New switcher"
-msgstr "Nouveau switcher"
+msgstr "Novi svičer"
 
 #: wp_user_stylesheet_switcher.php:464
 msgid "Stylesheet switcher"
-msgstr "Stylesheet Switcher"
+msgstr "Stylesheet svičer"
 
 #: wp_user_stylesheet_switcher.php:543
 msgid "WP User Stylesheet Switcher Options"
-msgstr "Configuration de WP User Stylesheet Switcher"
+msgstr "Opcije Stylesheet svičera korisnika WP-a "
 
 #: wp_user_stylesheet_switcher.php:544
 msgid "version "
-msgstr "version"
+msgstr "verzija"
 
 #: wp_user_stylesheet_switcher.php:546
 #, php-format
@@ -45,122 +46,118 @@ msgid ""
 "a donation</a>. This helps me keep motivation to update and develop plugins. "
 "Thanks!"
 msgstr ""
-"Si vous utilisez ou si vous aimez cette extension, merci de <a href=\"%s"
-"\">faire un don</a>. Cela me motive à continuer le développement et la mise "
-"à jour d'extensions."
+"Ukoliko koristite ili ukoliko vam se dopada ovaj plugin, molimo razmotrite "
+"<a href=\"%s\">making a donation</a>. Ovo mi pomaže da održim motivaciju kod "
+"ažuriranja i razvoja plugin-ova. Hvala! "
 
 #: wp_user_stylesheet_switcher.php:556
 msgid "Choose switcher"
-msgstr "Choisir un switcher"
+msgstr "Odaberite svičer"
 
 #: wp_user_stylesheet_switcher.php:561
 msgid "Add a new switcher"
-msgstr "Ajouter un nouveau switcher"
+msgstr "Dodajte novi svičer"
 
 #: wp_user_stylesheet_switcher.php:563
 msgid "Delete current switcher"
-msgstr "Supprimer le switcher en cours"
+msgstr "Izbrišite tekući svičer"
 
 #: wp_user_stylesheet_switcher.php:580
 msgid "Default label for this switcher"
-msgstr "Texte par défaut pour ce switcher"
+msgstr "Uobičajena oznaka za ovaj svičer"
 
 #: wp_user_stylesheet_switcher.php:584
 msgid "Folder path for CSS and icons files"
-msgstr "Dossier pour les fichiers CSS et les icônes."
+msgstr "Putanja folder-a za CSS fajlove i fajlove ikonica "
 
 #: wp_user_stylesheet_switcher.php:586
 msgid "Relative to theme path"
-msgstr "Chemin relatif au thème"
+msgstr "U vezi sa putanjom teme"
 
 #: wp_user_stylesheet_switcher.php:587
 msgid "Absolute path (not recommended)"
-msgstr "Chemin absolu (non recommandé)"
+msgstr "Apsolutna putanja (ne preporučuje se)"
 
 #: wp_user_stylesheet_switcher.php:595
 #, php-format
 msgid "Stylesheet option %d"
-msgstr "Feuille de style %d"
+msgstr "Opcija stylesheet-a %d"
 
 #: wp_user_stylesheet_switcher.php:596
 msgid "Option name "
-msgstr "Nom de l'option"
+msgstr "Ime opcije"
 
 #: wp_user_stylesheet_switcher.php:597
 msgid "CSS file name (including .CSS extension)"
-msgstr "Nom du fichier CSS (incluant l'extension .CSS)"
+msgstr "Ime CSS fajla (uključujući CSS ekstenziju)"
 
 #: wp_user_stylesheet_switcher.php:598
 msgid "Optional icon file (.jpg, .gif or .png)"
-msgstr "Fichier d'icône optionel (.jpg, .gif or .png)"
+msgstr "Opcioni fajl ikonice (.jpg, .gif ili .png)"
 
 #: wp_user_stylesheet_switcher.php:604
 msgid "+ Add another stylesheet option"
-msgstr "+ Ajouter une autre feuille de style"
+msgstr "+Dodajte još jednu stylesheet opciju"
 
 #: wp_user_stylesheet_switcher.php:605
 msgid "- Delete last stylesheet option"
-msgstr "- Supprimer la dernière feuille de style"
+msgstr "-Izbrišite poslednju stylesheet opciju"
 
 #: wp_user_stylesheet_switcher.php:610
 msgid "Default stylesheet"
-msgstr "Feuille de style par défaut"
+msgstr "Uobičajeni stylesheet"
 
 #: wp_user_stylesheet_switcher.php:619
 msgid "To update the content of this dropdown list, update options first"
-msgstr ""
-"Pour mettre à jour le contenu de cette liste déroulante, enregistrez d'abord "
-"la configuration."
+msgstr "Da biste ažurirali sadržaj ove padajuće liste, prvo ažurirajte opcije "
 
 #: wp_user_stylesheet_switcher.php:623
-#, fuzzy
 msgid "Automatic stylesheet rotation "
-msgstr "Rotation automatique de la feuille de style"
+msgstr "Automatska rotacija stylesheet-a"
 
 #: wp_user_stylesheet_switcher.php:624
-#, fuzzy
 msgid "Change stylesheet each "
-msgstr "Changer la feuille de style chaque"
+msgstr "Izmenite svaki stylesheet"
 
 #: wp_user_stylesheet_switcher.php:626 wp_user_stylesheet_switcher.php:870
 msgid "None"
-msgstr "Aucune"
+msgstr "Nijedan"
 
 #: wp_user_stylesheet_switcher.php:627
 msgid "Weekday"
-msgstr "Jour de la semaine"
+msgstr "Dan u sedmici"
 
 #: wp_user_stylesheet_switcher.php:628
 msgid "Week"
-msgstr "Semaine"
+msgstr "Sedmica"
 
 #: wp_user_stylesheet_switcher.php:629
 msgid "Month"
-msgstr "Mois"
+msgstr "Mesec"
 
 #: wp_user_stylesheet_switcher.php:630
 msgid "Season"
-msgstr "Saison"
+msgstr "Godišnje doba"
 
 #: wp_user_stylesheet_switcher.php:631
 msgid "Year"
-msgstr "Année"
+msgstr "Godina"
 
 #: wp_user_stylesheet_switcher.php:632
 msgid "Random"
-msgstr "Aléatoire"
+msgstr "Nasumice"
 
 #: wp_user_stylesheet_switcher.php:633
 msgid ""
 "The present stylesheet (ie. for the current month) is set with Default "
 "stylesheet."
 msgstr ""
-"La feuille de style actuelle (ex. pour le mois courant) est défini par "
-"l'option Feuille de style par défaut"
+"Trenutni stylesheet (to jest za tekući mesec) je podešen putem Deafault "
+"(uobičajenog) stylesheet-a."
 
 #: wp_user_stylesheet_switcher.php:638
 msgid "Option to remove stylesheets"
-msgstr "Option pour désactiver les feuilles de style"
+msgstr "Opcija za uklanjanje stylesheet-ova"
 
 #: wp_user_stylesheet_switcher.php:647
 msgid ""
@@ -168,14 +165,13 @@ msgid ""
 "stylesheet. Otherwise, choose the option associated with no stylesheet. To "
 "update the content of this dropdown list, update options first. "
 msgstr ""
-"Laissez vide si vous ne voulez pas offrir d'option sans feuille de style. "
-"Autrement, choisissez l'option associée à l'absence de feuille de style. "
-"Pour mettre à jour le contenu de cette liste déroulante, enregistrez d'abord "
-"la configuration."
+"Ostavite nepopunjeno ukoliko ne želite da ponudite opciju za uklanjanje svih "
+"stylesheet-ova. U suprotnom izaberite opciju pridruženu stylesheet-u. Da "
+"biste ažurirali sadržaj ove padajuće liste, prvo ažurirajte opcije."
 
 #: wp_user_stylesheet_switcher.php:651
 msgid "Option to revert to defaults"
-msgstr "Option de revenir aux valeurs par défaut"
+msgstr "Opcija za povratak na default-ove"
 
 #: wp_user_stylesheet_switcher.php:660
 msgid ""
@@ -183,95 +179,97 @@ msgid ""
 "settings. Otherwise, choose the option associated with it. To update the "
 "content of this dropdown list, update options first. "
 msgstr ""
-"Laissez vide si vous ne désirez pas d'option pour revenir aux valeurs par "
-"défaut. Sinon, choisissez l'option associée à lui associer. Pour mettre à "
-"jour le contenu de cette liste déroulante, enregistrez d'abord la "
-"configuration."
+"Ostavite nepopunjeno ukoliko ne želite da ponudite opciju za povratak na "
+"default (uobičajena) podešavanja. U suprotnom izaberite tome pridruženu "
+"opciju. Da biste ažurirali sadržaj ove padajuće liste, prvo ažurirajte "
+"opcije."
 
 #: wp_user_stylesheet_switcher.php:663
 msgid "Optional icon file for single switcher button (.jpg, .gif or .png)"
-msgstr "Fichier d'icône optionel pour le bouton unique (.jpg, .gif or .png)"
+msgstr ""
+"Opcioni fajl ikonice za pojedinačni taster svičer-a (.jpg, .gif ili .png)"
 
 #: wp_user_stylesheet_switcher.php:667
 msgid "Save options"
-msgstr "Enregistrez la configuration"
+msgstr "Sačuvajte opcije"
 
 #: wp_user_stylesheet_switcher.php:678
 msgid "WP User Stylesheet Switcher"
-msgstr "WP User Stylesheet Switcher"
+msgstr "Stylesheet svičer korisnika WP-a"
 
 #: wp_user_stylesheet_switcher.php:689 wp_user_stylesheet_switcher.php:830
 msgid "Stylesheet choice"
-msgstr "Choix de feuille de style"
+msgstr "Odabir stylesheet-a"
 
 #: wp_user_stylesheet_switcher.php:724
 msgid "Settings"
-msgstr "Configuration"
+msgstr "Podešavanja"
 
 #: wp_user_stylesheet_switcher.php:775
 msgid "I will not be translated!"
-msgstr "Je ne serai pas traduit!"
+msgstr "Neće mi se prevoditi!"
 
 #: wp_user_stylesheet_switcher.php:818
 msgid ""
 "Settings for Wp user style sheetswitcher out of date. Please review the "
 "options in the admin panel to configure the widget."
 msgstr ""
-"La configuration pour Wp user style sheetswitcher est périmée. Veuillez "
-"revoir les options dans le panneau d'administration du widget."
+"Podešavanja za stylesheet svičer korisnika WP-a su istekla. Molimo "
+"pregledajte opcije u administrativnom panel-u da biste konfigurisali "
+"dodatak.  "
 
 #: wp_user_stylesheet_switcher.php:833
 msgid "Widget title"
-msgstr "Titre du widget"
+msgstr "Naziv widget-a (“alatni blok”)"
 
 #: wp_user_stylesheet_switcher.php:838
 msgid "Show widget title"
-msgstr "Afficher titre du widget"
+msgstr "Prikazati naziv widget-a"
 
 #: wp_user_stylesheet_switcher.php:842
 msgid "Select switcher"
-msgstr "Choisir un switcher"
+msgstr "Selektujte svičer"
 
 #: wp_user_stylesheet_switcher.php:851
 msgid "List title"
-msgstr "Titre de la liste"
+msgstr "Izlistajte naziv"
 
 #: wp_user_stylesheet_switcher.php:856
 msgid "Show list title"
-msgstr "Afficher titre de la liste"
+msgstr "Prikazati naziv liste"
 
 #: wp_user_stylesheet_switcher.php:859
 msgid "List type"
-msgstr "Type de liste"
+msgstr "Tip liste"
 
 #: wp_user_stylesheet_switcher.php:862
 msgid "Dropdown list"
-msgstr "Liste déroulante"
+msgstr "Padajuća lista"
 
 #: wp_user_stylesheet_switcher.php:863
 msgid "Icon list"
-msgstr "Liste d'icônes"
+msgstr "Lista ikonica"
 
 #: wp_user_stylesheet_switcher.php:864
 msgid "Switcher button"
-msgstr "Bouton unique"
+msgstr "Taster svičer-a"
 
 #: wp_user_stylesheet_switcher.php:867
 msgid "Show icon names"
-msgstr "Afficher nom icônes"
+msgstr "Pokazi ikonice"
 
 #: wp_user_stylesheet_switcher.php:871
 msgid "Before the icon"
-msgstr "Avant l'içône"
+msgstr "Pre ikonice"
 
 #: wp_user_stylesheet_switcher.php:872
 msgid "After the icon"
-msgstr "Après l'icône"
+msgstr "Posle ikonice"
 
 #: wp_user_stylesheet_switcher.php:873
 msgid "Over the icon"
-msgstr "Au-dessus de l'icône"
+msgstr "Iznad ikonice"
 
 #: wp_user_stylesheet_switcher.php:874
 msgid "Under the icon"
-msgstr "En dessous de l'icône"
+msgstr "Ispod ikonice"
