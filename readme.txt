@@ -3,8 +3,8 @@ Contributors: vgstef
 Donate link: http://web.globulesverts.org
 Tags: stylesheet, customize, CSS, accessibility, multisite
 Requires at least: 3.6
-Tested up to: 4.2.2
-Stable tag: v2.0.3
+Tested up to: 4.2.3
+Stable tag: v2.1.0
 License: GPLv2 or later
 
 
@@ -32,8 +32,13 @@ On the frontend, when a choice is made in the dropdown list, the webpage is relo
 * Chose between theme relative path or absolute path (useful to customize multisite)
 * Optional automatic theme rotation (weekday, week, month, year or random)
 * Ready for internationalization
-* Languages already available : English, French, Spanish (thanks to Andrew Kurtis from WebHostingHub)
 * Complete uninstall (removes options and widgets)
+
+Languages already available
+* English
+* French
+* Spanish (thanks to Andrew Kurtis from WebHostingHub)
+* Serbo-Croatian (thanks to Andrijana Nikolic from WebHostingGeeks)
 
 To see an example, visit [plugin page](http://web.globulesverts.org/wp-user-stylesheet-switcher).
 
@@ -65,6 +70,9 @@ You can give a different look for the icon list for each CSS files.
 If no icon files are specified in the admin settings, the buttons will show the name of the stylesheet.
 
 If you want to offer the option of desactivating all stylesheets, you have to add an option give a name to that option and specify a an empty css file in the configuration page. Then, select that option in the droplist "Option to remove stylesheets".
+
+= Show icon link =
+If showing the available stylesheets as icons, you can also print the name of the stylesheets before, after, over or under the icon. In php, you would add 'icon_names'=>'after' to the array to show the names after each icon.
 
 = Automatic stylesheet rotation =
 This option offer to possibility to automatically change the stylesheet. There are different options (weekday, week, month, year or random)
@@ -127,6 +135,10 @@ Then my other files only need to override the original styles.
 
 
 == Changelog ==
+= 2.1.0 =
+* Add the possibility to show link text with the icon (before, after, over or under)
+* Add Serbi translations
+
 = 2.0.3 =
 * Fix stylesheet flashes when changing page
 

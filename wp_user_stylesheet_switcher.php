@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP User Stylesheet Switcher
-Version: v2.0.3
+Version: v2.1.0
 Plugin URI: http://wordpress.org/plugins/wp-user-stylesheet-switcher/
 Author: Stéphane Groleau
 Author URI: http://web.globulesverts.org
@@ -54,7 +54,7 @@ class WPUserStylesheetSwitcher {
 		} else
 			$fileName = get_stylesheet_directory_uri().'/'.$fileName;
 		return $fileName;
-	}	
+	}
 
 	/*
 	 * Get settings and check version. Update settings if necessary.
@@ -312,10 +312,26 @@ class WPUserStylesheetSwitcher {
 			
 			if (("true" == $attributes['show_list_title']) || ("on" == $attributes['show_list_title'])) $output .= $attributes['list_title'];
 		
+			$icon_names = "none";
+			if (isset($attributes['icon_names']))
+				$icon_names = $attributes['icon_names'];
+		
 			$noOption=0;
 			foreach ($settings['switchers'][$switcherId]['options'] as $option) {	
 				if (($option['file'] != '') && ($option['name'] != '') && ($option['icon'] != '')) {
+					if ($icon_names != "none")
+						$output .= '<div class="icon_names">';
+					if ($icon_names == "before")
+						$output .= '<a href="#" class="wp_user_stylesheet_switcher_iconnames_'.$switcherId.'" onclick="wp_user_stylesheet_switcher_changeCSS(\''.$switcherId.'\', \''.$noOption.'\');">'.$option['name'].'</a>';
+					else if ($icon_names == "over")
+						$output .= '<a href="#" class="wp_user_stylesheet_switcher_iconnames_'.$switcherId.'" onclick="wp_user_stylesheet_switcher_changeCSS(\''.$switcherId.'\', \''.$noOption.'\');">'.$option['name'].'</a><br>';
 					$output .= '<button class="wp_user_stylesheet_switcher_button wp_user_stylesheet_switcher_icon_'.$switcherId.'_'.$noOption.' '.($stylesheet_choice==$noOption? "wp_user_stylesheet_switcher_active_option" :"").'" onclick="wp_user_stylesheet_switcher_changeCSS(\''.$switcherId.'\', \''.$noOption.'\');"><img class="wp_user_stylesheet_switcher_icon" src="'.$this->get_path($switcherId, $option['icon']).'"  alt="'.$option['name'].'"></button>';
+					if ($icon_names == "after")
+						$output .= '<a href="#" class="wp_user_stylesheet_switcher_iconnames_'.$switcherId.'" onclick="wp_user_stylesheet_switcher_changeCSS(\''.$switcherId.'\', \''.$noOption.'\');">'.$option['name'].'</a>';
+					else if ($icon_names == "under")
+						$output .= '<br><a href="#" class="wp_user_stylesheet_switcher_iconnames_'.$switcherId.'" onclick="wp_user_stylesheet_switcher_changeCSS(\''.$switcherId.'\', \''.$noOption.'\');">'.$option['name'].'</a>';
+					if ($icon_names != "none")
+						$output .= '</div>';
 					$noOption++;
 				}
 			}
@@ -737,10 +753,23 @@ class WPUserStylesheetSwitcher {
 		load_plugin_textdomain($domain, FALSE, dirname(plugin_basename(__FILE__)).'/languages/');
 	}
 
+	/*
+	 * Enqueu script for admin widget options
+	 * 
+	 * */
+	public function wp_user_stylesheet_switcher_widget_script() 
+	{
+		wp_enqueue_script(
+				'wp_user_stylesheet_switcher_toggle_showlink', 
+				plugins_url().'/wp-user-stylesheet-switcher/js/wp_user_stylesheet_switcher_admin.js',
+				array('jquery')
+			);
+	}
+
 	public function __construct() {
 	    
 		if (!defined('WP_USER_STYLESHEET_SWITCHER_VERSION'))
-			define('WP_USER_STYLESHEET_SWITCHER_VERSION', '2.0.3');
+			define('WP_USER_STYLESHEET_SWITCHER_VERSION', '2.1.0');
 	
 		add_action('init', array($this, 'load_plugin_textdomain'));
 		$text = __('I will not be translated!', 'wp-user-stylesheet-switcher');
@@ -764,6 +793,8 @@ class WPUserStylesheetSwitcher {
 		add_action('load_textdomain', array( $this, 'load_custom_language_files_wp_user_stylesheet_switcher') , 10, 2);
 
 		register_activation_hook(__FILE__, array( $this, 'wp_user_stylesheet_switcher_plugin_install'));
+		
+		add_action( 'admin_enqueue_scripts', array( $this, 'wp_user_stylesheet_switcher_widget_script') );
 	}
 }
 
@@ -788,6 +819,10 @@ class WP_User_Stylesheet_Switcher extends WP_Widget {
 			echo "</p>";
 			return;
 		}
+		
+		$icon_names = "none";
+		if (isset($instance['icon_names']))
+			$icon_names = $instance['icon_names'];
 		
 		$subArray = array_keys($settings['switchers']);
 		$firstSwitcher = reset($subArray);
@@ -822,11 +857,21 @@ class WP_User_Stylesheet_Switcher extends WP_Widget {
 		   <input type="checkbox" id="<?php echo $this->get_field_id('show_list_title'); ?>" name="<?php echo $this->get_field_name('show_list_title'); ?>" <?php if ($instance['show_list_title']=="true") echo 'checked="checked"' ?> />
 		  </p>
 		  <label for="<?php echo $this->get_field_id('list_type') ?>"> <?php echo (__("List type", "wp-user-stylesheet-switcher")); ?></label>
-		  <select id="<?php echo $this->get_field_id('list_type'); ?>" name="<?php echo $this->get_field_name('list_type') ?>">';
+		  <select id="<?php echo $this->get_field_id('list_type'); ?>" name="<?php echo $this->get_field_name('list_type') ?>"onchange="wp_user_stylesheet_switcher_toggle_showlink(this.value,'<?php echo $this->get_field_id('icon_names'); ?>');">';
 		  
 			<option value="dropdown" <?php if ("dropdown"==$instance['list_type']) echo ' selected="selected"'; ?> ><?php _e("Dropdown list", "wp-user-stylesheet-switcher");?></option>
 			<option value="icon" <?php if ("icon"==$instance['list_type']) echo ' selected="selected"'; ?> ><?php _e("Icon list", "wp-user-stylesheet-switcher");?></option>
 			<option value="button" <?php if ("button"==$instance['list_type']) echo ' selected="selected"'; ?> ><?php _e("Switcher button", "wp-user-stylesheet-switcher");?></option>
+		  </select>
+		  </p>
+		  <label for="<?php echo $this->get_field_id('icon_names') ?>"> <?php echo (__("Show icon names", "wp-user-stylesheet-switcher")); ?></label>
+		  <select id="<?php echo $this->get_field_id('icon_names'); ?>" name="<?php echo $this->get_field_name('icon_names') ?>">';
+		  
+			<option value="none" <?php if ("none"==$icon_names) echo ' selected="selected"'; ?> ><?php _e("None", "wp-user-stylesheet-switcher");?></option>
+			<option value="before" <?php if ("before"==$icon_names) echo ' selected="selected"'; ?> ><?php _e("Before the icon", "wp-user-stylesheet-switcher");?></option>
+			<option value="after" <?php if ("after"==$icon_names) echo ' selected="selected"'; ?> ><?php _e("After the icon", "wp-user-stylesheet-switcher");?></option>
+			<option value="over" <?php if ("over"==$icon_names) echo ' selected="selected"'; ?> ><?php _e("Over the icon", "wp-user-stylesheet-switcher");?></option>
+			<option value="under" <?php if ("under"==$icon_names) echo ' selected="selected"'; ?> ><?php _e("Under the icon", "wp-user-stylesheet-switcher");?></option>
 		  </select>
 		  </p>
 		   
@@ -842,6 +887,7 @@ class WP_User_Stylesheet_Switcher extends WP_Widget {
 		$instance['list_title'] = $new_instance['list_title'];
 		$instance['show_list_title'] = $new_instance['show_list_title']=="on"?"true":"false";
 		$instance['list_type'] = $new_instance['list_type'];
+		$instance['icon_names'] = $new_instance['icon_names'];
 		
 		return $instance;
 	}
@@ -853,7 +899,10 @@ class WP_User_Stylesheet_Switcher extends WP_Widget {
 			$switcherId = $instance['switcher_id'];
 		$title = $instance['title'];
 		$list_type = $instance['list_type'];
-
+		$icon_names = "none";
+		if (isset($instance['icon_names']))
+			$icon_names = $instance['icon_names'];
+			
 		echo $before_widget;
 		echo $before_title;
 		if ($instance['show_title']=="true") echo $title;
